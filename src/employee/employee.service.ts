@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Employees } from './employees.model';
+import { Employee } from './employee.model';
 
 @Injectable()
-export class EmployeesService {
+export class EmployeeService {
   constructor(
-    @InjectModel(Employees)
-    private readonly employeesModel: typeof Employees,
+    @InjectModel(Employee)
+    private readonly employeeModel: typeof Employee,
   ) {}
 
-  async findByEmail(email: string): Promise<Employees | null> {
+  async findByEmail(email: string): Promise<Employee | null> {
     console.log('Searching for email:', email);
-    const employee = await this.employeesModel.findOne({ 
+    const employee = await this.employeeModel.findOne({ 
       where: { email },
       attributes: [
         'employeeId',

@@ -7,10 +7,10 @@ import {
     AutoIncrement,
     HasMany,
   } from 'sequelize-typescript';
-  import { Employees } from '../employees/employees.model';
+  import { Employee } from '../employee/employee.model';
   
   @Table({
-    tableName: 'departments',
+    tableName: 'department',
     timestamps: false, // Add this if you don't use createdAt/updatedAt
   })
   export class Department extends Model<Department> {
@@ -25,7 +25,7 @@ import {
     })
     departmentName: string;
   
-    @HasMany(() => Employees)
-    employees: Employees[];
+    @HasMany(() => Employee)
+    employee: Employee[];
   }
   

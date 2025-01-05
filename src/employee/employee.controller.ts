@@ -1,8 +1,8 @@
 import { Controller, Post, Body, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from '../auth/auth.service';
 
-@Controller('employees')
-export class EmployeesController {
+@Controller('employee')
+export class EmployeeController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')

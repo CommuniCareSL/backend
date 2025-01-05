@@ -7,7 +7,7 @@ import {
     AutoIncrement,
     HasMany,
   } from 'sequelize-typescript';
-  import { Employees } from '../employees/employees.model';
+  import { Employee } from '../employee/employee.model';
   
   @Table({
     tableName: 'sabha',
@@ -22,7 +22,6 @@ import {
     @Column({
       type: DataType.STRING,
       allowNull: false,
-      field: 'sabha_name', // Maps to the sabha_name column
     })
     sabhaName: string;
   
@@ -42,20 +41,16 @@ import {
       type: DataType.STRING,
       allowNull: false,
       unique: true,
-      field: 'sabha_mail', // Maps to the sabha_mail column
     })
     sabhaMail: string;
   
     @Column({
       type: DataType.STRING,
       allowNull: false,
-      validate: {
-        is: /^\+?[0-9]{7,15}$/, // Validation for 7-15 digits, optional '+'
-      },
     })
     contactNo: string;
   
-    @HasMany(() => Employees)
-    employees: Employees[];
+    @HasMany(() => Employee)
+    employee: Employee[];
   }
   

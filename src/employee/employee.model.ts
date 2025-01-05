@@ -10,22 +10,20 @@ import { Department } from '../department/department.model';
 import { Sabha } from '../sabha/sabha.model';
 
 @Table({
-  tableName: 'employees',
+  tableName: 'employee',
   timestamps: false, // Set to true if you want createdAt/updatedAt automatically
 })
-export class Employees extends Model {
+export class Employee extends Model {
   @Column({
     type: DataType.INTEGER,
     primaryKey: true,
     autoIncrement: true,
-    field: 'employee_id', // Map to the correct column name in the DB
   })
   employeeId: number;
 
   @Column({ 
     type: DataType.STRING, 
-    allowNull: false, 
-    validate: { isEmail: true }, // Add email format validation
+    allowNull: false,
   })
   email: string;
 
@@ -39,7 +37,7 @@ export class Employees extends Model {
   district: string;
 
   @ForeignKey(() => Sabha)
-  @Column({ type: DataType.INTEGER, field: 'sabha_id' }) // Map if DB column uses snake_case
+  @Column({ type: DataType.INTEGER}) // Map if DB column uses snake_case
   sabhaId: number;
 
   @BelongsTo(() => Sabha)
@@ -51,15 +49,17 @@ export class Employees extends Model {
   @Column({ 
     type: DataType.STRING, 
     allowNull: false, 
-    validate: { len: [8, 32] } // Optional: password validation for length
   })
   password: string;
 
-  @Column({ type: DataType.STRING })
+  @Column({
+    type: DataType.STRING,
+    defaultValue: 'employee',
+  })
   role: string;
 
   @ForeignKey(() => Department)
-  @Column({ type: DataType.INTEGER, field: 'department_id' }) // Map if DB column uses snake_case
+  @Column({ type: DataType.INTEGER}) // Map if DB column uses snake_case
   departmentId: number;
 
   @BelongsTo(() => Department)

@@ -10,6 +10,8 @@ import { SabhaModule } from './sabha/sabha.module';
 import { DepartmentController } from './department/department.controller';
 import { DepartmentModule } from './department/department.module';
 import { AuthModule } from './auth/auth.module';
+import { ComplaintModule } from './complaint/complaint/complaint.module';
+import { ComplaintCategoryModule } from './complaint/complaint-category/complaint-category.module';
 
 @Module({
   imports: [
@@ -19,6 +21,8 @@ import { AuthModule } from './auth/auth.module';
     SabhaModule,
     DepartmentModule,
     AuthModule,
+    ComplaintModule,
+    ComplaintCategoryModule,
   ],
   controllers: [AppController, EmployeeController, SabhaController, DepartmentController],
   providers: [AppService],

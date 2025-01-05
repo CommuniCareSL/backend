@@ -87,11 +87,16 @@ export class Complaint extends Model<Complaint> {
   })
   status: number; // 0 - Pending, 1 - In Progress, 2 - Resolved, 3 - Rejected
 
+  // @Column({
+  //   type: DataType.TEXT,
+  //   allowNull: true,
+  // })
+  // proofs: string; // Binary data (e.g., image)
   @Column({
-    type: DataType.TEXT,
+    type: DataType.JSONB, // Using JSONB to store Base64 images with metadata
     allowNull: true,
   })
-  proofs: string; // Binary data (e.g., image)
+  proofs: any;
 
   @CreatedAt
   @Column({

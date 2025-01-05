@@ -23,3 +23,16 @@ VALUES
 ('Account Division'),
 ('Work and Plan Division'),
 ('Development Division');
+
+INSERT INTO "employee" ("email", "address", "nic", "district", "sabhaId", "name", "password", "role", "departmentId")
+VALUES
+('john.doe@example.com', '123 Elm Street, Colombo', '123456789V', 'Colombo', 1, 'John Doe', 'password123', 'employee', 1),
+('jane.doe@example.com', '456 Oak Avenue, Colombo', '987654321V', 'Colombo', 1, 'Jane Doe', 'password123', 'employee', 2),
+('mary.jane@example.com', '789 Pine Street, Kandy', '111223344V', 'Kandy', 2, 'Mary Jane', 'password123', 'employee', 3),
+('mark.smith@example.com', '101 Maple Road, Galle', '222334455V', 'Galle', 1, 'Mark Smith', 'password123', 'employee', 4),
+('lucy.white@example.com', '202 Birch Street, Jaffna', '333445566V', 'Jaffna', 2, 'Lucy White', 'password123', 'employee', 5),
+('susan.green@example.com', '303 Cedar Lane, Colombo', '444556677V', 'Colombo', 1, 'Susan Green', 'password123', 'employee', 1),
+('michael.brown@example.com', '404 Cherry Avenue, Kandy', '555667788V', 'Kandy', 1, 'Michael Brown', 'password123', 'employee', 2),
+('emily.jones@example.com', '505 Ash Road, Galle', '666778899V', 'Galle', 2, 'Emily Jones', 'password123', 'employee', 3),
+('oliver.martin@example.com', '606 Palm Street, Jaffna', '777889900V', 'Jaffna', 2, 'Oliver Martin', 'password123', 'employee', 4),
+('amelia.clark@example.com', '707 Willow Road, Colombo', '888990011V', 'Colombo', 1, 'Amelia Clark', 'password123', 'employee', 5);

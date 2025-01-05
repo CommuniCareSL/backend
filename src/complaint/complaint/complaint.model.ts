@@ -74,6 +74,12 @@ export class Complaint extends Model<Complaint> {
   })
   description: string;
 
+  @Column({
+    type: DataType.TEXT,
+    allowNull: true,
+  })
+  area: string;
+
   @Default(0)
   @Column({
     type: DataType.INTEGER,

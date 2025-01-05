@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import * as express from 'express';
 
 // async function bootstrap() {
 //   const app = await NestFactory.create(AppModule);
@@ -17,6 +18,9 @@ async function bootstrap() {
     allowedHeaders: '*',  
     credentials: true,
   });
+
+  // Increase the limit for request bodies to 50MB
+  app.use(express.json({ limit: '50mb' }));
 
   await app.listen(3000);
 }

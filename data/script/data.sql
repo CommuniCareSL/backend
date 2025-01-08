@@ -1,5 +1,6 @@
 INSERT INTO "sabha" ("sabhaName", "district", "address", "sabhaMail", "contactNo")
 VALUES 
+('Sri Lanka Sabha', 'All Island', 'National Secretariat, Colombo', 'srilanka.sabha@example.com', '+94100000000'),
 ('Colombo Municipal Council', 'Colombo', '123 Main Street, Colombo', 'colombo.mc@example.com', '+94111234567'),
 ('Dehiwala - Mt. Lavinia Municipal Council', 'Colombo', '45 Beach Road, Dehiwala', 'dehiwala.mc@example.com', '+94112345678'),
 ('Sri Jayawardenepura Kotte Municipal Council', 'Colombo', '78 Parliament Road, Kotte', 'kotte.mc@example.com', '+94123456789'),
@@ -26,16 +27,26 @@ VALUES
 
 INSERT INTO "employee" ("email", "address", "nic", "district", "sabhaId", "name", "password", "role", "departmentId")
 VALUES
-('john.doe@example.com', '123 Elm Street, Colombo', '123456789V', 'Colombo', 1, 'John Doe', 'password123', 'employee', 1),
-('jane.doe@example.com', '456 Oak Avenue, Colombo', '987654321V', 'Colombo', 1, 'Jane Doe', 'password123', 'employee', 2),
-('mary.jane@example.com', '789 Pine Street, Kandy', '111223344V', 'Kandy', 2, 'Mary Jane', 'password123', 'employee', 3),
-('mark.smith@example.com', '101 Maple Road, Galle', '222334455V', 'Galle', 1, 'Mark Smith', 'password123', 'employee', 4),
-('lucy.white@example.com', '202 Birch Street, Jaffna', '333445566V', 'Jaffna', 2, 'Lucy White', 'password123', 'employee', 5),
-('susan.green@example.com', '303 Cedar Lane, Colombo', '444556677V', 'Colombo', 1, 'Susan Green', 'password123', 'employee', 1),
-('michael.brown@example.com', '404 Cherry Avenue, Kandy', '555667788V', 'Kandy', 1, 'Michael Brown', 'password123', 'employee', 2),
-('emily.jones@example.com', '505 Ash Road, Galle', '666778899V', 'Galle', 2, 'Emily Jones', 'password123', 'employee', 3),
-('oliver.martin@example.com', '606 Palm Street, Jaffna', '777889900V', 'Jaffna', 2, 'Oliver Martin', 'password123', 'employee', 4),
-('amelia.clark@example.com', '707 Willow Road, Colombo', '888990011V', 'Colombo', 1, 'Amelia Clark', 'password123', 'employee', 5);
+('super@sl', 'No. 1, National Road, SL', '000000000V', 'SL', 1, 'Super Admin', '12345678', 'admin', 1);
+
+
+INSERT INTO "employee" ("email", "address", "nic", "district", "sabhaId", "name", "password", "role", "departmentId")
+VALUES
+-- sabhaId = 2, district = Colombo
+('admin@colombo', '123 Elm Street, Colombo', '123456789V', 'Colombo', 2, 'John Doe', '12345678', 'employee', 2),
+('health@colombo', '456 Oak Avenue, Colombo', '987654321V', 'Colombo', 2, 'Jane Doe', '12345678', 'employee', 3),
+('account@colombo', '789 Pine Street, Colombo', '111223344V', 'Colombo', 2, 'Mary Jane', '12345678', 'employee', 4),
+('workplan@colombo', '101 Maple Road, Colombo', '222334455V', 'Colombo', 2, 'Mark Smith', '12345678', 'employee', 5),
+('development@colombo', '202 Birch Street, Colombo', '333445566V', 'Colombo', 2, 'Lucy White', '12345678', 'employee', 6),
+
+-- sabhaId = 3, district = Dehiwala
+('admin@dehiwala', '303 Cedar Lane, Colombo', '444556677V', 'Colombo', 3, 'Susan Green', '12345678', 'employee', 2),
+('health@dehiwala', '404 Cherry Avenue, Colombo', '555667788V', 'Colombo', 3, 'Michael Brown', '12345678', 'employee', 3),
+('account@dehiwala', '505 Ash Road, Colombo', '666778899V', 'Colombo', 3, 'Emily Jones', '12345678', 'employee', 4),
+('workplan@dehiwala', '606 Palm Street, Colombo', '777889900V', 'Colombo', 3, 'Oliver Martin', '12345678', 'employee', 5),
+('development@dehiwala', '707 Willow Road, Colombo', '888990011V', 'Colombo', 3, 'Amelia Clark', '12345678', 'employee', 6);
+
+
 
 
 INSERT INTO "complaintCategory" ("name", "departmentId")

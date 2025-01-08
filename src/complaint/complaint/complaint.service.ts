@@ -9,6 +9,7 @@ import axios from 'axios';
 import * as XLSX from 'xlsx';
 import * as path from 'path';
 import * as fs from 'fs';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class ComplaintService {
@@ -172,5 +173,82 @@ private findSabhaIdByArea(area: string): number {
     });
   
     return complaint;
+  }
+
+  // Method to get complaints based on departmentId and sabhaId
+  async getComplaintsByDepartmentAndSabha(departmentId: number, sabhaId: number) {
+    try {
+      // Step 1: Fetch ComplaintCategory based on departmentId
+      const categories = await this.categoryModel.findAll({
+        where: { departmentId },
+        attributes: ['complaintCategoryId', 'name'], // Fetch only necessary columns
+      });
+
+      if (!categories || categories.length === 0) {
+        throw new Error('No categories found for the given departmentId');
+      }
+
+      // Extract categoryIds from the fetched categories
+      const categoryIds = categories.map((category) => category.complaintCategoryId);
+
+      // Step 2: Fetch Complaints based on categoryIds and sabhaId
+      const complaints = await this.complaintModel.findAll({
+        where: {
+          categoryId: { [Op.in]: categoryIds }, // Match any of the categoryIds
+          sabhaId, // Match the given sabhaId
+        },
+        attributes: ['complaintId', 'area', 'status', 'createdAt'], // Fetch only necessary columns
+        include: [
+          {
+            model: ComplaintCategory,
+            attributes: ['name'], // Include the category name
+          },
+        ],
+      });
+
+      console.log('Raw complaints data:', JSON.stringify(complaints, null, 2));
+
+      if (!complaints || complaints.length === 0) {
+        throw new Error('No complaints found for the given criteria');
+      }
+
+      // Step 3: Format the response to include the category name
+      const formattedComplaints = complaints.map((complaint) => ({
+        complaintId: complaint.complaintId,
+        area: complaint.area,
+        status: complaint.status,
+        createdAt: complaint.createdAt,
+        categoryName: complaint.complaintCategory.name, // Include the category name
+      }));
+
+      // Step 4: Return the formatted complaints
+      return formattedComplaints;
+    } catch (error) {
+      console.error('Error fetching complaints:', error);
+      throw error;
+    }
+  }
+
+  async getComplaintById(complaintId: number) {
+    try {
+      const complaint = await this.complaintModel.findOne({
+        where: { complaintId }, // Find the complaint by ID
+        include: [
+          {
+            model: this.userModel, // Include the associated User model
+            attributes: ['fullName'], // Only fetch the fullName field
+          },
+        ],
+      });
+
+      if (!complaint) {
+        throw new Error('Complaint not found');
+      }
+
+      return complaint;
+    } catch (error) {
+      console.error('Error fetching complaint details:', error);
+      throw error; // Throw the error to be handled by the caller
+    }
   }
 }

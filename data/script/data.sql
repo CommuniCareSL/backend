@@ -63,3 +63,10 @@ VALUES
     ('Unauthorized street sellers', 4), -- Category 10
     ('Dangerous Walls or buildings', 5), -- Category 11
     ('Others', 2);                    -- Category 12
+
+INSERT INTO public."reservationCategory" ("reservationCategoryId", "name", "departmentId") VALUES
+(1, 'Playground Reservation', 4),
+(2, 'Communityhall Reservation', 4),
+(3, 'Advertisement Reservation', 4),
+(4, 'Crematorium Reservation', 3),
+(5, 'Gully Bowser Service Reservation', 3);

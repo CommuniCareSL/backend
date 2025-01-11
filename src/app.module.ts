@@ -12,6 +12,9 @@ import { DepartmentModule } from './department/department.module';
 import { AuthModule } from './auth/auth.module';
 import { ComplaintModule } from './complaint/complaint/complaint.module';
 import { ComplaintCategoryModule } from './complaint/complaint-category/complaint-category.module';
+import { ReservationCategoryModule } from './reservation/reservation-category/reservation-category.module';
+import { GroundModule } from './reservation/playground/ground/ground.module';
+import { GroundReservationModule } from './reservation/playground/ground-reservation/ground-reservation.module';
 
 @Module({
   imports: [
@@ -23,6 +26,9 @@ import { ComplaintCategoryModule } from './complaint/complaint-category/complain
     AuthModule,
     ComplaintModule,
     ComplaintCategoryModule,
+    ReservationCategoryModule,
+    GroundModule,
+    GroundReservationModule,
   ],
   controllers: [AppController, EmployeeController, SabhaController, DepartmentController],
   providers: [AppService],

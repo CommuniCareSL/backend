@@ -70,3 +70,16 @@ INSERT INTO public."reservationCategory" ("reservationCategoryId", "name", "depa
 (3, 'Advertisement Reservation', 4),
 (4, 'Crematorium Reservation', 3),
 (5, 'Gully Bowser Service Reservation', 3);
+
+INSERT INTO public.ground ("sabhaId", name, area, terms, note, "pricePerDay", "isDeleted", "createdAt")
+VALUES 
+(1, 'Central Park Ground', 'Central Park', 'Open for community events', 'Reserved for weekends only', 500, false, NOW()),
+(1, 'Riverside Sports Ground', 'Riverside Ground', 'Available for sports activities', 'Booking required in advance', 300, false, NOW());
+
+INSERT INTO public."groundReservation" 
+("userId", "event", description, "groundId", "reservationDate", payment, note, status, "createdAt", "updatedAt")
+VALUES 
+(1, 'Community Gathering', 'Annual community meetup', 1, '2025-01-20 10:00:00', 1000, 'Includes refreshments', 0, NOW(), NOW()),
+(1, 'Sports Tournament', 'Local football championship', 1, '2025-01-25 14:00:00', 1500, 'Requires setup of goalposts', 0, NOW(), NOW()),
+(1, 'Community Gathering', 'Annual community meetup', 1, '2025-01-24 10:00:00', 1000, 'Includes refreshments', 1, NOW(), NOW())
+;

@@ -24,4 +24,30 @@ export class GroundReservationService {
       reservation.reservationDate.toISOString().split('T')[0],
     );
   }
+
+  async createReservation(reservationData: any): Promise<GroundReservation[]> {
+    const { dates, totalPayment, ...rest } = reservationData;
+
+    // Check if required fields are missing
+    if (!dates || !totalPayment) {
+      throw new Error('dates and totalPayment are required fields.');
+    }
+
+    // Calculate payment per date
+    const paymentPerDate = totalPayment / dates.length;
+
+    // Create a reservation for each date
+    const reservations = await Promise.all(
+      dates.map(async (date: string) => {
+        return this.groundReservationModel.create({
+          ...rest,
+          reservationDate: date,
+          payment: paymentPerDate,
+          status: 0, // Set status to 0 (Booked)
+        });
+      }),
+    );
+
+    return reservations;
+  }
 }

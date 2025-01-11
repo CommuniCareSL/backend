@@ -24,6 +24,12 @@ export class Ground extends Model<Ground> {
   @Column(DataType.INTEGER)
   groundId: number;
 
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  name: string;
+
   @ForeignKey(() => Sabha)
   @Column({
     type: DataType.INTEGER,
@@ -45,6 +51,12 @@ export class Ground extends Model<Ground> {
     allowNull: true,
   })
   terms: string;
+
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+  })
+  pricePerDay: number;
 
   @Column({
     type: DataType.TEXT,

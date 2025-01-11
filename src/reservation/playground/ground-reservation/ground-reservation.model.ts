@@ -91,7 +91,7 @@ export class GroundReservation extends Model<GroundReservation> {
     type: DataType.INTEGER,
     allowNull: false,
   })
-  status: number; // 0 - Booked, 1 - Rejected
+  status: number; // 0 - Booked, 1 - Cancelled
 
   @CreatedAt
   @Column({

@@ -9,12 +9,12 @@ export class EmployeeService {
     @InjectModel(Employee)
     private readonly employeeModel: typeof Employee,
     @InjectModel(Sabha)
-    private readonly sabhaModel: typeof Sabha
+    private readonly sabhaModel: typeof Sabha,
   ) {}
 
   async findByEmail(email: string): Promise<Employee | null> {
     console.log('Searching for email:', email);
-    const employee = await this.employeeModel.findOne({ 
+    const employee = await this.employeeModel.findOne({
       where: { email },
       attributes: [
         'employeeId',
@@ -23,8 +23,8 @@ export class EmployeeService {
         'name',
         'role',
         'sabhaId',
-        'departmentId'
-      ]
+        'departmentId',
+      ],
     });
     console.log('Database result:', JSON.stringify(employee, null, 2));
     return employee;
@@ -88,5 +88,41 @@ export class EmployeeService {
 
     return result;
   }
-}
+  //have to update sabha hasAdmin column
+  async addAdmin(adminData: any) {
+    try {
+      const newAdmin = await this.employeeModel.create(adminData);
+      return newAdmin;
+    } catch (error) {
+      console.error('Error adding admin:', error);
+      throw new Error('Failed to add admin');
+    }
+  }
 
+  async updateAdmin(employeeId: number, adminData: any) {
+    console.log('Employee ID (Service):', employeeId); // Debugging
+    console.log('Admin Data (Service):', adminData); // Debugging
+
+    try {
+      // Remove employeeId from the update data
+      const { employeeId: _, ...updateData } = adminData;
+
+      const [updatedRows] = await this.employeeModel.update(updateData, {
+        where: { employeeId },
+      });
+
+      if (updatedRows === 0) {
+        throw new Error('Admin not found or no changes made');
+      }
+
+      const updatedAdmin = await this.employeeModel.findOne({
+        where: { employeeId },
+      });
+
+      return updatedAdmin;
+    } catch (error) {
+      console.error('Error updating admin:', error);
+      throw new Error('Failed to update admin');
+    }
+  }
+}

@@ -7,6 +7,7 @@ import {
   Query,
   Param,
   NotFoundException,
+  Put,
 } from '@nestjs/common';
 import { AuthService } from '../auth/auth.service';
 import { EmployeeService } from './employee.service';
@@ -51,4 +52,33 @@ export class EmployeeController {
     }
     return admin;
   }
+
+  @Post('addAdmin')
+  async addAdmin(@Body() adminData: any) {
+    try {
+      const newAdmin = await this.employeeService.addAdmin(adminData);
+      return { message: 'Admin added successfully', data: newAdmin };
+    } catch (error) {
+      throw new UnauthorizedException('Failed to add admin');
+    }
+  }
+
+  @Put('updateAdmin/:employeeId')
+async updateAdmin(
+  @Param('employeeId') employeeId: number, // Ensure this is a number
+  @Body() adminData: any,
+) {
+  console.log('Employee ID (Controller):', employeeId); // Debugging
+  console.log('Admin Data (Controller):', adminData); // Debugging
+
+  try {
+    const updatedAdmin = await this.employeeService.updateAdmin(
+      employeeId,
+      adminData,
+    );
+    return { message: 'Admin updated successfully', data: updatedAdmin };
+  } catch (error) {
+    throw new UnauthorizedException('Failed to update admin');
+  }
+}
 }

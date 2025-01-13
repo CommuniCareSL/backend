@@ -42,7 +42,7 @@ export class UserController {
     return this.userService.findUserById(userId);
   }
 
-  @Patch(':userId/block') // Define a PATCH endpoint for blocking/unblocking a user
+  @Patch('/:userId/block') // Define a PATCH endpoint for blocking/unblocking a user
   async blockUser(@Param('userId') userId: number,@Body('isBlock') isBlock: boolean,) {
     return this.userService.updateBlockStatus(userId, isBlock);
   }

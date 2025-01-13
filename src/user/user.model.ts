@@ -62,17 +62,17 @@ export class User extends Model<User> {
   role: string;
 
   @Column({
-    type: DataType.INTEGER,
-    defaultValue: 0,
+    type: DataType.BOOLEAN,
     allowNull: false,
+    defaultValue: false,
   })
-  isBlock: number;
+  isBlock: boolean;
 
   @Column({
-    type: DataType.INTEGER,
-    defaultValue: 0,
+    type: DataType.BOOLEAN,
     allowNull: false,
+    defaultValue: false,
   })
-  isDelete: number;
+  isDelete: boolean;
 }
 

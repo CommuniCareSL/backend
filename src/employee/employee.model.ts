@@ -33,6 +33,12 @@ export class Employee extends Model {
   @Column({ type: DataType.STRING })
   nic: string;
 
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  contactNo: string;
+
   @Column({ type: DataType.STRING })
   district: string;
 
@@ -64,4 +70,11 @@ export class Employee extends Model {
 
   @BelongsTo(() => Department)
   department: Department;
+
+  @Column({
+    type: DataType.BOOLEAN,
+    allowNull: false,
+    defaultValue: false,
+  })
+  isDeleted: boolean;
 }

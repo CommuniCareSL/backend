@@ -49,6 +49,13 @@ import {
       allowNull: false,
     })
     contactNo: string;
+
+    @Column({
+      type: DataType.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    })
+    hasAdmin: boolean;
   
     @HasMany(() => Employee)
     employee: Employee[];

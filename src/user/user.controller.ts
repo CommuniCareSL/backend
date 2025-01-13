@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Patch } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.model'; 
 
@@ -24,5 +24,26 @@ export class UserController {
     } catch (error) {
       throw new Error(error.message);
     }
+  }
+
+
+
+
+
+  //WEB APP
+  @Post('filter')
+  async filterUsers(@Body() body: { sabhaId: number, isBlock: boolean }) {
+    const { sabhaId, isBlock } = body;
+    return this.userService.findUsersBySabhaAndBlockStatus(sabhaId, isBlock);
+  }
+
+  @Get('/by/:userId') // Define a route to fetch user details by userId
+  async getUserById(@Param('userId') userId: number) {
+    return this.userService.findUserById(userId);
+  }
+
+  @Patch('/:userId/block') // Define a PATCH endpoint for blocking/unblocking a user
+  async blockUser(@Param('userId') userId: number,@Body('isBlock') isBlock: boolean,) {
+    return this.userService.updateBlockStatus(userId, isBlock);
   }
 }

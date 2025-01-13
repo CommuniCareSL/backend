@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Employee } from './employee.model';
 import { Sabha } from '../sabha/sabha.model';
+import { Department } from '../department/department.model';
 
 @Injectable()
 export class EmployeeService {
@@ -10,6 +11,8 @@ export class EmployeeService {
     private readonly employeeModel: typeof Employee,
     @InjectModel(Sabha)
     private readonly sabhaModel: typeof Sabha,
+    @InjectModel(Department)
+    private readonly departmentModel: typeof Department,
   ) {}
 
   async findByEmail(email: string): Promise<Employee | null> {
@@ -125,4 +128,56 @@ export class EmployeeService {
       throw new Error('Failed to update admin');
     }
   }
+
+
+
+  // Fetch employees by sabhaId and include department details
+  async getEmployeesBySabhaId(sabhaId: number): Promise<any[]> {
+    const employees = await this.employeeModel.findAll({
+      where: { sabhaId }, // Filter by sabhaId
+      include: [
+        {
+          model: this.departmentModel, // Include department details
+          attributes: ['departmentName'], // Only fetch departmentName
+        },
+      ],
+      attributes: ['employeeId', 'name', 'departmentId'], // Fetch only required fields
+    });
+
+    // Map the result to include departmentName
+    return employees.map((employee) => ({
+      id: employee.employeeId,
+      name: employee.name,
+      department: employee.department.departmentName, // Access departmentName from the included model
+    }));
+  }
+
+  // Fetch employee details by ID
+  async getEmployeeById(employeeId: number): Promise<Employee> {
+    const employee = await this.employeeModel.findOne({
+      where: { employeeId },
+    });
+    if (!employee) {
+      throw new NotFoundException('Employee not found');
+    }
+    return employee;
+  }
+
+  // Update employee details
+  async updateEmployee(
+    employeeId: number,
+    updatedData: Partial<Employee>,
+  ): Promise<Employee> {
+    const employee = await this.employeeModel.findOne({
+      where: { employeeId },
+    });
+    if (!employee) {
+      throw new NotFoundException('Employee not found');
+    }
+
+    // Update the employee details
+    await employee.update(updatedData);
+    return employee;
+  }
+  
 }

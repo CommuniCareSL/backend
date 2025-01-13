@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from '../auth/auth.service';
 import { EmployeeService } from './employee.service';
+import { Employee } from './employee.model';
 
 @Controller('employee')
 export class EmployeeController {
@@ -64,21 +65,61 @@ export class EmployeeController {
   }
 
   @Put('updateAdmin/:employeeId')
-async updateAdmin(
-  @Param('employeeId') employeeId: number, // Ensure this is a number
-  @Body() adminData: any,
-) {
-  console.log('Employee ID (Controller):', employeeId); // Debugging
-  console.log('Admin Data (Controller):', adminData); // Debugging
+  async updateAdmin(
+    @Param('employeeId') employeeId: number, // Ensure this is a number
+    @Body() adminData: any,
+  ) {
+    console.log('Employee ID (Controller):', employeeId); // Debugging
+    console.log('Admin Data (Controller):', adminData); // Debugging
 
-  try {
-    const updatedAdmin = await this.employeeService.updateAdmin(
-      employeeId,
-      adminData,
-    );
-    return { message: 'Admin updated successfully', data: updatedAdmin };
-  } catch (error) {
-    throw new UnauthorizedException('Failed to update admin');
+    try {
+      const updatedAdmin = await this.employeeService.updateAdmin(
+        employeeId,
+        adminData,
+      );
+      return { message: 'Admin updated successfully', data: updatedAdmin };
+    } catch (error) {
+      throw new UnauthorizedException('Failed to update admin');
+    }
   }
-}
+
+
+
+  @Get('bySabha')
+  async getEmployeesBySabhaId(@Query('sabhaId') sabhaId: number) {
+    if (!sabhaId) {
+      throw new NotFoundException('SabhaId is required');
+    }
+
+    const employees = await this.employeeService.getEmployeesBySabhaId(sabhaId);
+
+    if (!employees || employees.length === 0) {
+      throw new NotFoundException('No employees found for the given sabhaId');
+    }
+
+    return employees;
+  }
+
+  // Fetch employee details by ID
+  @Get(':employeeId')
+  async getEmployeeById(@Param('employeeId') employeeId: number): Promise<Employee> {
+    const employee = await this.employeeService.getEmployeeById(employeeId);
+    if (!employee) {
+      throw new NotFoundException('Employee not found');
+    }
+    return employee;
+  }
+
+  // Update employee details
+  @Put(':employeeId')
+  async updateEmployee(
+    @Param('employeeId') employeeId: number,
+    @Body() updatedData: Partial<Employee>,
+  ): Promise<Employee> {
+    const employee = await this.employeeService.updateEmployee(employeeId, updatedData);
+    if (!employee) {
+      throw new NotFoundException('Employee not found');
+    }
+    return employee;
+  }
 }

@@ -131,6 +131,17 @@ export class EmployeeService {
 
 
 
+  // Register a new employee
+  async registerEmployee(employeeData: Partial<Employee>): Promise<Employee> {
+    try {
+      const employee = await this.employeeModel.create(employeeData);
+      return employee;
+    } catch (error) {
+      console.error('Error registering employee:', error);
+      throw new NotFoundException('Failed to register employee');
+    }
+  }
+  
   // Fetch employees by sabhaId and include department details
   async getEmployeesBySabhaId(sabhaId: number): Promise<any[]> {
     const employees = await this.employeeModel.findAll({

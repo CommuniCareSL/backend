@@ -1,13 +1,5 @@
-import {
-  Controller,
-  Post,
-  Body,
-  UnauthorizedException,
-  Get,
-  Query,
-  Param,
-  NotFoundException,
-  Put,
+import { 
+  Controller, Post, Body, UnauthorizedException, Get, Query, Param, NotFoundException, Put 
 } from '@nestjs/common';
 import { AuthService } from '../auth/auth.service';
 import { EmployeeService } from './employee.service';
@@ -85,6 +77,18 @@ export class EmployeeController {
 
 
 
+  // Register a new employee
+  @Post('register')
+  async registerEmployee(@Body() employeeData: Partial<Employee>) {
+    try {
+      const employee =
+        await this.employeeService.registerEmployee(employeeData);
+      return { message: 'Employee registered successfully', employee };
+    } catch (error) {
+      throw new UnauthorizedException('Failed to register employee');
+    }
+  }
+
   @Get('bySabha')
   async getEmployeesBySabhaId(@Query('sabhaId') sabhaId: number) {
     if (!sabhaId) {
@@ -102,7 +106,9 @@ export class EmployeeController {
 
   // Fetch employee details by ID
   @Get(':employeeId')
-  async getEmployeeById(@Param('employeeId') employeeId: number): Promise<Employee> {
+  async getEmployeeById(
+    @Param('employeeId') employeeId: number,
+  ): Promise<Employee> {
     const employee = await this.employeeService.getEmployeeById(employeeId);
     if (!employee) {
       throw new NotFoundException('Employee not found');
@@ -116,7 +122,10 @@ export class EmployeeController {
     @Param('employeeId') employeeId: number,
     @Body() updatedData: Partial<Employee>,
   ): Promise<Employee> {
-    const employee = await this.employeeService.updateEmployee(employeeId, updatedData);
+    const employee = await this.employeeService.updateEmployee(
+      employeeId,
+      updatedData,
+    );
     if (!employee) {
       throw new NotFoundException('Employee not found');
     }

@@ -1,4 +1,4 @@
-import { Injectable, ConflictException } from '@nestjs/common';
+import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from './user.model';  // Adjust based on actual file path
 import * as bcrypt from 'bcrypt';
@@ -67,5 +67,62 @@ export class UserService {
       fullName: user.fullName,
       sabhaId: user.sabhaId,
     };
+  }
+
+
+
+
+
+
+
+
+  // Web app
+  async findUsersBySabhaAndBlockStatus(sabhaId: number, isBlock: boolean): Promise<{ userId: number, fullName: string, phoneNumber: string }[]> {
+    const users = await this.userModel.findAll({
+      where: {
+        sabhaId,
+        isBlock,
+      },
+      attributes: ['userId', 'fullName', 'phoneNumber'], // Select only the required fields
+    });
+
+    return users.map(user => ({
+      userId: user.userId,
+      fullName: user.fullName,
+      phoneNumber: user.phoneNumber,
+    }));
+  }
+
+  async findUserById(userId: number): Promise<{ userId: number; fullName: string; idNumber: string; email: string; phoneNumber: string; district: string }> {
+    const user = await this.userModel.findOne({
+      where: { userId }, // Find user by userId
+      attributes: ['userId', 'fullName', 'idNumber', 'email', 'phoneNumber', 'district'], // Select specific fields
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User with ID ${userId} not found`); // Throw an error if user is not found
+    }
+
+    return {
+      userId: user.userId,
+      fullName: user.fullName,
+      idNumber: user.idNumber,
+      email: user.email,
+      phoneNumber: user.phoneNumber,
+      district: user.district,
+    };
+  }
+
+  async updateBlockStatus(userId: number, isBlock: boolean): Promise<User> {
+    const user = await this.userModel.findOne({ where: { userId } }); // Find user by userId
+
+    if (!user) {
+      throw new NotFoundException(`User with ID ${userId} not found`); // Throw an error if user is not found
+    }
+
+    user.isBlock = isBlock; // Update isBlock status
+    await user.save(); // Save the updated user
+
+    return user; // Return the updated user
   }
 }

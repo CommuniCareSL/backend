@@ -32,8 +32,8 @@ export class UserService {
       sabhaId,
       email,
       password: hashedPassword,
-      isBlock: 0,
-      isDelete: 0,
+      isBlock: false,
+      isDelete: false,
     });
 
     return newUser;

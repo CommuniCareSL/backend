@@ -5,7 +5,7 @@ import { DatabaseModule } from './config/database.module';
 import { EmployeeController } from './employee/employee.controller';
 import { EmployeeModule } from './employee/employee.module';
 import { UserModule } from './user/user.module';
-import { SabhaController } from './sabha/sabha.controller';
+// import { SabhaController } from './sabha/sabha.controller';
 import { SabhaModule } from './sabha/sabha.module';
 import { DepartmentController } from './department/department.controller';
 import { DepartmentModule } from './department/department.module';
@@ -30,7 +30,7 @@ import { GroundReservationModule } from './reservation/playground/ground-reserva
     GroundModule,
     GroundReservationModule,
   ],
-  controllers: [AppController, EmployeeController, SabhaController, DepartmentController],
+  controllers: [AppController, EmployeeController, DepartmentController],
   providers: [AppService],
 })
 export class AppModule {}

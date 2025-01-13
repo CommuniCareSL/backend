@@ -25,10 +25,10 @@ VALUES
 ('Work and Plan Division'),
 ('Development Division');
 
+-- employee
 INSERT INTO "employee" ("email", "address", "nic", "district", "sabhaId", "name", "password", "role", "departmentId")
 VALUES
 ('super@sl', 'No. 1, National Road, SL', '000000000V', 'SL', 1, 'Super Admin', '12345678', 'admin', 1);
-
 
 INSERT INTO "employee" ("email", "address", "nic", "district", "sabhaId", "name", "password", "role", "departmentId")
 VALUES

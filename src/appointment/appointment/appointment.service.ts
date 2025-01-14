@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Appointment } from './appointment.model'; // Your Sequelize model
+import { Appointment } from './appointment.model';
 
 @Injectable()
 export class AppointmentService {
@@ -15,13 +15,13 @@ export class AppointmentService {
     selectedDate: string,
   ): Promise<number[]> {
     try {
-        console.log('sabhaId:', sabhaId, 'departmentId:', departmentId, 'selectedDate:', selectedDate);
       // Query the database for appointments matching the criteria
       const appointments = await this.appointmentModel.findAll({
         where: {
           sabhaId,
           departmentId,
           date: selectedDate,
+          status: [0, 2, 3], // Only include appointments with status 0 (Booked) or 3 (Completed)
         },
         attributes: ['timeSlot'], // Only fetch the timeSlot field
       });
@@ -39,6 +39,37 @@ export class AppointmentService {
     } catch (error) {
       console.error('Failed to fetch booked slots:', error);
       throw new Error('Failed to fetch booked slots');
+    }
+  }
+
+  async bookAppointment(bookingData: {
+    userId: number;
+    sabhaId: number;
+    serviceId: number;
+    serviceTitle: string;
+    departmentId: number;
+    date: string;
+    timeSlot: string;
+    notes?: string;
+  }): Promise<Appointment> {
+    try {
+      // Create a new appointment record in the database
+      const appointment = await this.appointmentModel.create({
+        userId: bookingData.userId,
+        sabhaId: bookingData.sabhaId,
+        serviceId: bookingData.serviceId,
+        title: bookingData.serviceTitle,
+        departmentId: bookingData.departmentId,
+        date: bookingData.date,
+        timeSlot: bookingData.timeSlot,
+        note: bookingData.notes || null,
+        status: 0, // Default status: 0 (Booked)
+      });
+
+      return appointment;
+    } catch (error) {
+      console.error('Failed to book appointment:', error);
+      throw new Error('Failed to book appointment');
     }
   }
 }

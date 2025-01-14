@@ -17,4 +17,18 @@ export class AppointmentController {
       date,
     );
   }
+
+  @Post()
+  async bookAppointment(@Body() bookingData: {
+    userId: number;
+    sabhaId: number;
+    serviceId: number;
+    serviceTitle: string;
+    departmentId: number;
+    date: string;
+    timeSlot: string;
+    notes?: string;
+  }) {
+    return this.appointmentService.bookAppointment(bookingData);
+  }
 }

@@ -16,6 +16,7 @@ import { GroundModule } from './reservation/playground/ground/ground.module';
 import { GroundReservationModule } from './reservation/playground/ground-reservation/ground-reservation.module';
 import { ChartModule } from './chart/chart.module';
 import { HolidayModule } from './appointment/holiday/holiday.module';
+import { AppointmentModule } from './appointment/appointment/appointment.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { HolidayModule } from './appointment/holiday/holiday.module';
     GroundReservationModule,
     ChartModule,
     HolidayModule,
+    AppointmentModule,
   ],
   controllers: [AppController, EmployeeController, DepartmentController],
   providers: [AppService],

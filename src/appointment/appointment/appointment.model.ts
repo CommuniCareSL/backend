@@ -75,7 +75,7 @@ export class Appointment extends Model<Appointment> {
 
 
   @Column({
-    type: DataType.DATE,
+    type: DataType.DATEONLY,
     allowNull: false,
   })
   date: Date;

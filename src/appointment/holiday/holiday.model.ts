@@ -19,7 +19,7 @@ export class Holiday extends Model<Holiday> {
   holidayId: number;
 
   @Column({
-    type: DataType.DATE,
+    type: DataType.DATEONLY,
     allowNull: false,
   })
   holidayDate: Date;

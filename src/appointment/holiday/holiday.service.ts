@@ -4,21 +4,32 @@ import { Holiday } from './holiday.model';
 
 @Injectable()
 export class HolidayService {
-    constructor(
-        @InjectModel(Holiday)
-        private holidayModel: typeof Holiday
-    ) {}
+  constructor(
+    @InjectModel(Holiday)
+    private holidayModel: typeof Holiday,
+  ) {}
 
-    async addHoliday(holiday: Holiday): Promise<Holiday> {
-        return this.holidayModel.create(holiday);
-    }
+  async addHoliday(holiday: {
+    holidayDate: string;
+    reason: string;
+  }): Promise<Holiday> {
+    // Convert the `holidayDate` string to a Date object
+    const holidayDate = new Date(holiday.holidayDate);
 
-    async getHolidayDates(): Promise<string[]> {
-        const holidays = await this.holidayModel.findAll({
-            attributes: ['holidayDate'], // Only fetch the `holidayDate` field
-        });
+    return this.holidayModel.create({
+      holidayDate,
+      reason: holiday.reason,
+    });
+  }
 
-        // Explicitly cast `holidayDate` to a Date object
-        return holidays.map(holiday => new Date(holiday.holidayDate).toISOString().split('T')[0]);
-    }
+  async getHolidayDates(): Promise<string[]> {
+    const holidays = await this.holidayModel.findAll({
+      attributes: ['holidayDate'], // Only fetch the `holidayDate` field
+    });
+
+    // Explicitly cast `holidayDate` to a Date object
+    return holidays.map(
+      (holiday) => new Date(holiday.holidayDate).toISOString().split('T')[0],
+    );
+  }
 }

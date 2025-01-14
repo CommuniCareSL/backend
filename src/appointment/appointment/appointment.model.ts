@@ -78,19 +78,25 @@ export class Appointment extends Model<Appointment> {
     type: DataType.DATEONLY,
     allowNull: false,
   })
-  date: Date;
+  date: String;
+
+  // @Column({
+  //   type: DataType.TIME,
+  //   allowNull: false,
+  // })
+  // startTime: string;
+  
+  // @Column({
+  //   type: DataType.TIME,
+  //   allowNull: false,
+  // })
+  // endTime: string;
 
   @Column({
     type: DataType.TIME,
     allowNull: false,
   })
-  startTime: string;
-  
-  @Column({
-    type: DataType.TIME,
-    allowNull: false,
-  })
-  endTime: string;
+  timeSlot: string;
 
   @Column({
     type: DataType.TEXT,
@@ -103,7 +109,7 @@ export class Appointment extends Model<Appointment> {
     type: DataType.INTEGER,
     allowNull: false,
   })
-  status: number; // 0 - Booked, 1 - Cancelled
+  status: number; // 0 - Booked, 1 - Cancelled, 2 - Pending, 3 - Completed
 
   @CreatedAt
   @Column({

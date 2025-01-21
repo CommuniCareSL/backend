@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { ConfigService } from '@nestjs/config';
 import { Complaint } from './complaint.model';
@@ -127,7 +127,7 @@ private findSabhaIdByArea(area: string): number {
         
         // Search through all results for neighborhood
         const neighborhoodResult = response.data.results.find((result: any) => 
-          result.types.includes('neighborhood')
+          result.types.includes('administrative_area_level_4')
         );
         
         if (neighborhoodResult) {
@@ -250,5 +250,53 @@ private findSabhaIdByArea(area: string): number {
       console.error('Error fetching complaint details:', error);
       throw error; // Throw the error to be handled by the caller
     }
+  }
+
+  async updateComplaintStatus(complaintId: number, status: number) {
+    const complaint = await this.complaintModel.findByPk(complaintId);
+  
+    if (!complaint) {
+      throw new NotFoundException('Complaint not found');
+    }
+  
+    // Update the status
+    complaint.status = status;
+    complaint.updatedAt = new Date();
+    await complaint.save(); // Save the updated complaint
+    return complaint;
+  }
+
+  // Add a note to a complaint
+  async addNoteToComplaint(complaintId: number, note: string) {
+    const complaint = await this.complaintModel.findByPk(complaintId);
+
+    if (!complaint) {
+      throw new NotFoundException('Complaint not found');
+    }
+
+    // If a note already exists, append the new note
+    if (complaint.note) {
+      complaint.note = `${complaint.note}\n${note}`;
+    } else {
+      // If no note exists, set the new note
+      complaint.note = note;
+    }
+
+    await complaint.save(); // Save the updated complaint
+    return complaint;
+  }
+
+  // Update a note in a complaint
+  async updateNoteInComplaint(complaintId: number, note: string) {
+    const complaint = await this.complaintModel.findByPk(complaintId);
+
+    if (!complaint) {
+      throw new NotFoundException('Complaint not found');
+    }
+
+    // Update the note
+    complaint.note = note;
+    await complaint.save(); // Save the updated complaint
+    return complaint;
   }
 }

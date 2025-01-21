@@ -106,6 +106,12 @@ export class Complaint extends Model<Complaint> {
   })
   createdAt: Date;
 
+  @Column({
+    type: DataType.TEXT,
+    allowNull: true,
+  })
+  note: string;
+
   @UpdatedAt
   @Column({
     type: DataType.DATE, // This stores both the date and time

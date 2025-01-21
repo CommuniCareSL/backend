@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Get, Query, Param, NotFoundException } from '@nestjs/common';
+import { Body, Controller, Post, Get, Put, Query, Param, NotFoundException } from '@nestjs/common';
 import { ComplaintService } from './complaint.service';
 
 @Controller('complaint')
@@ -44,13 +44,72 @@ export class ComplaintController {
   @Get('/:id') // Define the endpoint with a dynamic parameter `id`
   async getComplaint(@Param('id') complaintId: number) {
     try {
-      const complaint = await this.complaintService.getComplaintById(complaintId);
+      const complaint =
+        await this.complaintService.getComplaintById(complaintId);
       return {
         message: 'Complaint fetched successfully',
         complaint,
       };
     } catch (error) {
       throw new NotFoundException('Complaint not found'); // Handle the error
+    }
+  }
+
+  @Put(':complaintId/status')
+  async updateComplaintStatus(
+    @Param('complaintId') complaintId: string,
+    @Body('status') status: number,
+  ) {
+    try {
+      const updatedComplaint =
+        await this.complaintService.updateComplaintStatus(+complaintId, status);
+      return {
+        message: 'Status updated successfully',
+        complaint: updatedComplaint,
+      };
+    } catch (error) {
+      console.error('Error updating status:', error);
+      throw error;
+    }
+  }
+
+  // Add a note to a complaint
+  @Post(':complaintId/note')
+  async addNoteToComplaint(
+    @Param('complaintId') complaintId: string,
+    @Body('note') note: string,
+  ) {
+    try {
+      const updatedComplaint = await this.complaintService.addNoteToComplaint(
+        +complaintId,
+        note,
+      );
+      return {
+        message: 'Note added successfully',
+        complaint: updatedComplaint,
+      };
+    } catch (error) {
+      console.error('Error adding note:', error);
+      throw error;
+    }
+  }
+
+  // Update a note in a complaint
+  @Put(':complaintId/note')
+  async updateNoteInComplaint(
+    @Param('complaintId') complaintId: string,
+    @Body('note') note: string,
+  ) {
+    try {
+      const updatedComplaint =
+        await this.complaintService.updateNoteInComplaint(+complaintId, note);
+      return {
+        message: 'Note updated successfully',
+        complaint: updatedComplaint,
+      };
+    } catch (error) {
+      console.error('Error updating note:', error);
+      throw error;
     }
   }
 }

@@ -53,13 +53,13 @@ INSERT INTO "complaintCategory" ("name", "departmentId")
 VALUES
     ('Road hazards', 5),              -- Category 1
     ('Unsafe trees in roadside', 5),  -- Category 2
-    ('Garbage disposal on roadside', 5), -- Category 3
-    ('Mosquito breeding grounds', 5), -- Category 4
-    ('Street lamp malfunction', 3),   -- Category 5
-    ('Stray animals', 3),             -- Category 6
-    ('Unauthorized constructions', 3), -- Category 7
-    ('Damages to the street drains', 3), -- Category 8
-    ('Issues related to public toilets', 4), -- Category 9
+    ('Street lamp malfunction', 3),   -- Category 3
+    ('Damages to the street drains', 3), -- Category 4
+    ('Garbage disposal on roadside', 5), -- Category 5
+    ('Mosquito breeding grounds', 5), -- Category 6
+    ('Issues related to public toilets', 4), -- Category 7
+    ('Stray animals', 3),             -- Category 8
+    ('Unauthorized constructions', 3), -- Category 9    
     ('Unauthorized street sellers', 4), -- Category 10
     ('Dangerous Walls or buildings', 5), -- Category 11
     ('Others', 2);                    -- Category 12

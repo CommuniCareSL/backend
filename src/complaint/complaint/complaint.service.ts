@@ -127,7 +127,7 @@ private findSabhaIdByArea(area: string): number {
         
         // Search through all results for neighborhood
         const neighborhoodResult = response.data.results.find((result: any) => 
-          result.types.includes('neighborhood')
+          result.types.includes('administrative_area_level_4')
         );
         
         if (neighborhoodResult) {

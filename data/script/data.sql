@@ -25,6 +25,10 @@ VALUES
 ('Work and Plan Division'),
 ('Development Division');
 
+-- user
+INSERT INTO public."user" ("userId", "fullName", "idNumber", "phoneNumber", district, "sabhaId", email, "password", "role", "isBlock", "isDelete") 
+VALUES (0, 'Anonymous', NULL, NULL, NULL, 1, NULL, NULL, 'user', false, false);
+
 -- employee
 INSERT INTO "employee" ("email", "address", "nic", "district", "sabhaId", "name", "password", "role", "departmentId")
 VALUES

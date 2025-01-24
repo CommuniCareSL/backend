@@ -37,7 +37,7 @@ VALUES
 INSERT INTO "employee" ("email", "address", "nic", "district", "sabhaId", "name", "password", "role", "departmentId")
 VALUES
 -- sabhaId = 2, district = Colombo
-('admin@colombo', '123 Elm Street, Colombo', '123456789V', 'Colombo', 2, 'John Doe', '12345678', 'employee', 2),
+('admin@colombo', '1234567890kk Elm Street, Colombo', '123456789V', 'Colombo', 2, 'John Doe', '12345678', 'employee', 2),
 ('health@colombo', '456 Oak Avenue, Colombo', '987654321V', 'Colombo', 2, 'Jane Doe', '12345678', 'employee', 3),
 ('account@colombo', '789 Pine Street, Colombo', '111223344V', 'Colombo', 2, 'Mary Jane', '12345678', 'employee', 4),
 ('workplan@colombo', '101 Maple Road, Colombo', '222334455V', 'Colombo', 2, 'Mark Smith', '12345678', 'employee', 5),
@@ -86,4 +86,17 @@ VALUES
 (1, 'Community Gathering', 'Annual community meetup', 1, '2025-01-20 10:00:00', 1000, 'Includes refreshments', 0, NOW(), NOW()),
 (1, 'Sports Tournament', 'Local football championship', 1, '2025-01-25 14:00:00', 1500, 'Requires setup of goalposts', 0, NOW(), NOW()),
 (1, 'Community Gathering', 'Annual community meetup', 1, '2025-01-24 10:00:00', 1000, 'Includes refreshments', 1, NOW(), NOW())
+;
+
+INSERT INTO public.hall ("sabhaId", name, area, terms, note, "pricePerDay", "isDeleted", "createdAt")
+VALUES 
+(1, 'Gamini City Hall', 'Gamini City', 'Open for community events', 'Reserved for weekends only', 500, false, NOW()),
+(1, 'Riverside Hall', 'Riverside Ground', 'Available for sports activities', 'Booking required in advance', 300, false, NOW());
+
+INSERT INTO public."hallReservation" 
+("userId", "event", description, "hallId", "reservationDate", payment, note, status, "createdAt", "updatedAt")
+VALUES 
+(1, 'Community Gathering', 'Annual community meetup', 1, '2025-01-20 10:00:00', 1000, 'Includes refreshments', 0, NOW(), NOW()),
+(1, 'Colors Night', 'Annual colors night event', 1, '2025-01-25 14:00:00', 1500, 'Requires setup of goalposts', 0, NOW(), NOW()),
+(1, 'Community Gathering-Back to School', 'Annual community meetup', 1, '2025-01-24 10:00:00', 1000, 'Includes refreshments', 1, NOW(), NOW())
 ;

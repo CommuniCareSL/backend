@@ -14,6 +14,8 @@ import { ComplaintCategoryModule } from './complaint/complaint-category/complain
 import { ReservationCategoryModule } from './reservation/reservation-category/reservation-category.module';
 import { GroundModule } from './reservation/playground/ground/ground.module';
 import { GroundReservationModule } from './reservation/playground/ground-reservation/ground-reservation.module';
+import { HallModule } from './reservation/communityhall/hall/hall.module';
+import { HallReservationModule } from './reservation/communityhall/hall-reservation/hall-reservation.module';
 import { ChartModule } from './chart/chart.module';
 import { HolidayModule } from './appointment/holiday/holiday.module';
 import { AppointmentModule } from './appointment/appointment/appointment.module';
@@ -31,6 +33,8 @@ import { AppointmentModule } from './appointment/appointment/appointment.module'
     ReservationCategoryModule,
     GroundModule,
     GroundReservationModule,
+    HallModule,
+    HallReservationModule,
     ChartModule,
     HolidayModule,
     AppointmentModule,

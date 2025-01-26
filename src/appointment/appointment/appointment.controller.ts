@@ -83,4 +83,33 @@ export class AppointmentController {
   async startTodayAppointment(@Param('id') appointmentId: number) {
     return this.appointmentService.startTodayAppointment(appointmentId);
   }
+
+  // Get all ongoing appointments (status = 2)
+  @Get('ongoing')
+  async getOngoingAppointments(
+    @Query('sabhaId') sabhaId: number,
+    @Query('departmentId') departmentId: number,
+  ) {
+    return this.appointmentService.getOngoingAppointments(sabhaId, departmentId);
+  }
+
+  // Get details of a specific ongoing appointment
+  @Get('ongoing/:id')
+  async getOngoingAppointmentDetails(@Param('id') appointmentId: number) {
+    return this.appointmentService.getOngoingAppointmentDetails(appointmentId);
+  }
+
+  // Mark an ongoing appointment as completed (status = 3)
+  @Put('ongoing/:id/complete')
+  async completeOngoingAppointment(@Param('id') appointmentId: number) {
+    return this.appointmentService.completeOngoingAppointment(appointmentId);
+  }
+
+  @Put('ongoing/:id/cancel')
+  async cancelOngoingAppointment(
+    @Param('id') appointmentId: number,
+    @Body('cancelReason') cancelReason: string,
+  ) {
+    return this.appointmentService.cancelOngoingAppointment(appointmentId, cancelReason);
+  }
 }

@@ -197,4 +197,63 @@ export class AppointmentService {
 
     return appointment;
   }
+
+  // Get all ongoing appointments (status = 2)
+  async getOngoingAppointments(sabhaId: number, departmentId: number) {
+    return this.appointmentModel.findAll({
+      where: {
+        sabhaId,
+        departmentId,
+        status: 2, // Ongoing appointments
+      },
+      order: [['date', 'ASC']], // Order by date in ascending order
+      include: [
+        {
+          model: this.userModel,
+          attributes: ['fullName'], // Include the user's full name
+        },
+      ],
+    });
+  }
+
+  // Get details of a specific ongoing appointment
+  async getOngoingAppointmentDetails(appointmentId: number) {
+    return this.appointmentModel.findOne({
+      where: { appointmentId, status: 2 }, // Ensure the appointment is ongoing
+      include: [
+        {
+          model: this.userModel,
+          attributes: ['fullName'], // Include the user's full name
+        },
+      ],
+    });
+  }
+
+  // Mark an ongoing appointment as completed (status = 3)
+  async completeOngoingAppointment(appointmentId: number) {
+    const appointment = await this.appointmentModel.findByPk(appointmentId);
+    if (!appointment) {
+      throw new Error('Appointment not found');
+    }
+
+    // Update status to 3 (completed)
+    appointment.status = 3;
+    await appointment.save();
+
+    return appointment;
+  }
+
+  async cancelOngoingAppointment(appointmentId: number, cancelReason: string) {
+    const appointment = await this.appointmentModel.findByPk(appointmentId);
+    if (!appointment) {
+      throw new Error('Appointment not found');
+    }
+
+    // Update status to 1 (cancelled) and save the cancellation reason
+    appointment.status = 1;
+    appointment.ocNote = cancelReason; // Save the cancellation reason in the note field
+    await appointment.save();
+
+    return appointment;
+  }
 }

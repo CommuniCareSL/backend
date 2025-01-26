@@ -87,3 +87,16 @@ VALUES
 (1, 'Sports Tournament', 'Local football championship', 1, '2025-01-25 14:00:00', 1500, 'Requires setup of goalposts', 0, NOW(), NOW()),
 (1, 'Community Gathering', 'Annual community meetup', 1, '2025-01-24 10:00:00', 1000, 'Includes refreshments', 1, NOW(), NOW())
 ;
+
+INSERT INTO public.hall ("sabhaId", name, area, terms, note, "pricePerDay", "isDeleted", "createdAt")
+VALUES 
+(1, 'Gamini City Hall', 'Gamini City', 'Open for community events', 'Reserved for weekends only', 500, false, NOW()),
+(1, 'Riverside Hall', 'Riverside Ground', 'Available for sports activities', 'Booking required in advance', 300, false, NOW());
+
+INSERT INTO public."hallReservation" 
+("userId", "event", description, "hallId", "reservationDate", payment, note, status, "createdAt", "updatedAt")
+VALUES 
+(1, 'Community Gathering', 'Annual community meetup', 1, '2025-01-20 10:00:00', 1000, 'Includes refreshments', 0, NOW(), NOW()),
+(1, 'Colors Night', 'Annual colors night event', 1, '2025-01-25 14:00:00', 1500, 'Requires setup of goalposts', 0, NOW(), NOW()),
+(1, 'Community Gathering-Back to School', 'Annual community meetup', 1, '2025-01-24 10:00:00', 1000, 'Includes refreshments', 1, NOW(), NOW())
+;

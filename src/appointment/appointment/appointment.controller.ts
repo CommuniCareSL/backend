@@ -35,7 +35,7 @@ export class AppointmentController {
 
 
   // Get all appointments with status = 0, from the day after tomorrow onwards, ordered by creation date DESC
-  @Get()
+  @Get('booked')
   async getBookedAppointments(
     @Query('sabhaId') sabhaId: number,
     @Query('departmentId') departmentId: number,
@@ -44,16 +44,43 @@ export class AppointmentController {
   }
 
   // Get appointment details by ID, including the user's full name
-  @Get('/:id')
+  @Get('booked/:id')
   async getBookedAppointmentDetails(@Param('id') appointmentId: number) {
     return this.appointmentService.getBookedAppointmentDetails(appointmentId);
   }
 
-  @Put('/:id/cancel')
+  @Put('booked/:id/cancel')
   async cancelBookedAppointment(
     @Param('id') appointmentId: number,
     @Body('cancelReason') cancelReason: string,
   ) {
     return this.appointmentService.cancelBookedAppointment(appointmentId, cancelReason);
+  }
+
+  @Get('today')
+  async getTodayAppointments(
+    @Query('sabhaId') sabhaId: number,
+    @Query('departmentId') departmentId: number,
+  ) {
+    return this.appointmentService.getTodayAppointments(sabhaId, departmentId);
+  }
+
+  // Get appointment details by ID, including the user's full name
+  @Get('today/:id')
+  async getTodayAppointmentDetails(@Param('id') appointmentId: number) {
+    return this.appointmentService.getTodayAppointmentDetails(appointmentId);
+  }
+
+  @Put('today/:id/cancel')
+  async cancelTodayAppointment(
+    @Param('id') appointmentId: number,
+    @Body('cancelReason') cancelReason: string,
+  ) {
+    return this.appointmentService.cancelTodayAppointment(appointmentId, cancelReason);
+  }
+
+  @Put('today/:id/start')
+  async startTodayAppointment(@Param('id') appointmentId: number) {
+    return this.appointmentService.startTodayAppointment(appointmentId);
   }
 }

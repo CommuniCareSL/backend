@@ -129,4 +129,72 @@ export class AppointmentService {
 
     return appointment;
   }
+
+
+  async getTodayAppointments(sabhaId: number, departmentId: number) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Start of the day
+  
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1); // Start of the next day
+  
+    return this.appointmentModel.findAll({
+      where: {
+        sabhaId,
+        departmentId,
+        status: 0, // Assuming status 0 means "scheduled"
+        date: {
+          [Op.gte]: today, // Greater than or equal to today
+          [Op.lt]: tomorrow, // Less than tomorrow (i.e., today only)
+        },
+      },
+      order: [['timeSlot', 'ASC']], // Order by date in ascending order
+      include: [
+        {
+          model: this.userModel,
+          attributes: ['fullName'], // Include the user's full name
+        },
+      ],
+    });
+  }
+
+  // Get appointment details by ID, including the user's full name
+  async getTodayAppointmentDetails(appointmentId: number) {
+    return this.appointmentModel.findOne({
+      where: { appointmentId },
+      include: [
+        {
+          model: this.userModel,
+          attributes: ['fullName'], // Include the user's full name
+        },
+      ],
+    });
+  }
+
+  async cancelTodayAppointment(appointmentId: number, cancelReason: string) {
+    const appointment = await this.appointmentModel.findByPk(appointmentId);
+    if (!appointment) {
+      throw new Error('Appointment not found');
+    }
+
+    // Update status to 1 (cancelled) and save the cancellation reason
+    appointment.status = 1;
+    appointment.tcNote = cancelReason; // Save the cancellation reason in the note field
+    await appointment.save();
+
+    return appointment;
+  }
+
+  async startTodayAppointment(appointmentId: number) {
+    const appointment = await this.appointmentModel.findByPk(appointmentId);
+    if (!appointment) {
+      throw new Error('Appointment not found');
+    }
+
+    // Update status to "ongoing" (e.g., status = 2)
+    appointment.status = 2; // Assuming 2 represents "ongoing"
+    await appointment.save();
+
+    return appointment;
+  }
 }

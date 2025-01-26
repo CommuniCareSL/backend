@@ -23,7 +23,11 @@ VALUES
 ('Health Division'),
 ('Account Division'),
 ('Work and Plan Division'),
-('Development Division');
+-- ('Development Division');
+
+-- user
+INSERT INTO public."user" ("userId", "fullName", "idNumber", "phoneNumber", district, "sabhaId", email, "password", "role", "isBlock", "isDelete") 
+VALUES (0, 'Anonymous', NULL, NULL, NULL, 1, NULL, NULL, 'user', false, false);
 
 -- employee
 INSERT INTO "employee" ("email", "address", "nic", "district", "sabhaId", "name", "password", "role", "departmentId")
@@ -37,14 +41,14 @@ VALUES
 ('health@colombo', '456 Oak Avenue, Colombo', '987654321V', 'Colombo', 2, 'Jane Doe', '12345678', 'employee', 3),
 ('account@colombo', '789 Pine Street, Colombo', '111223344V', 'Colombo', 2, 'Mary Jane', '12345678', 'employee', 4),
 ('workplan@colombo', '101 Maple Road, Colombo', '222334455V', 'Colombo', 2, 'Mark Smith', '12345678', 'employee', 5),
-('development@colombo', '202 Birch Street, Colombo', '333445566V', 'Colombo', 2, 'Lucy White', '12345678', 'employee', 6),
+-- ('development@colombo', '202 Birch Street, Colombo', '333445566V', 'Colombo', 2, 'Lucy White', '12345678', 'employee', 6),
 
 -- sabhaId = 3, district = Dehiwala
 ('admin@dehiwala', '303 Cedar Lane, Colombo', '444556677V', 'Colombo', 3, 'Susan Green', '12345678', 'employee', 2),
 ('health@dehiwala', '404 Cherry Avenue, Colombo', '555667788V', 'Colombo', 3, 'Michael Brown', '12345678', 'employee', 3),
 ('account@dehiwala', '505 Ash Road, Colombo', '666778899V', 'Colombo', 3, 'Emily Jones', '12345678', 'employee', 4),
 ('workplan@dehiwala', '606 Palm Street, Colombo', '777889900V', 'Colombo', 3, 'Oliver Martin', '12345678', 'employee', 5),
-('development@dehiwala', '707 Willow Road, Colombo', '888990011V', 'Colombo', 3, 'Amelia Clark', '12345678', 'employee', 6);
+-- ('development@dehiwala', '707 Willow Road, Colombo', '888990011V', 'Colombo', 3, 'Amelia Clark', '12345678', 'employee', 6);
 
 
 
@@ -53,13 +57,13 @@ INSERT INTO "complaintCategory" ("name", "departmentId")
 VALUES
     ('Road hazards', 5),              -- Category 1
     ('Unsafe trees in roadside', 5),  -- Category 2
-    ('Garbage disposal on roadside', 5), -- Category 3
-    ('Mosquito breeding grounds', 5), -- Category 4
-    ('Street lamp malfunction', 3),   -- Category 5
-    ('Stray animals', 3),             -- Category 6
-    ('Unauthorized constructions', 3), -- Category 7
-    ('Damages to the street drains', 3), -- Category 8
-    ('Issues related to public toilets', 4), -- Category 9
+    ('Street lamp malfunction', 5),   -- Category 3
+    ('Damages to the street drains', 5), -- Category 4
+    ('Garbage disposal on roadside', 3), -- Category 5
+    ('Mosquito breeding grounds', 3), -- Category 6
+    ('Issues related to public toilets', 3), -- Category 7
+    ('Stray animals', 3),             -- Category 8
+    ('Unauthorized constructions', 5), -- Category 9    
     ('Unauthorized street sellers', 4), -- Category 10
     ('Dangerous Walls or buildings', 5), -- Category 11
     ('Others', 2);                    -- Category 12
@@ -68,7 +72,7 @@ INSERT INTO public."reservationCategory" ("reservationCategoryId", "name", "depa
 (1, 'Playground Reservation', 4),
 (2, 'Communityhall Reservation', 4),
 (3, 'Advertisement Reservation', 4),
-(4, 'Crematorium Reservation', 3),
+(4, 'Crematorium Reservation', 4),
 (5, 'Gully Bowser Service Reservation', 3);
 
 INSERT INTO public.ground ("sabhaId", name, area, terms, note, "pricePerDay", "isDeleted", "createdAt")
@@ -82,4 +86,17 @@ VALUES
 (1, 'Community Gathering', 'Annual community meetup', 1, '2025-01-20 10:00:00', 1000, 'Includes refreshments', 0, NOW(), NOW()),
 (1, 'Sports Tournament', 'Local football championship', 1, '2025-01-25 14:00:00', 1500, 'Requires setup of goalposts', 0, NOW(), NOW()),
 (1, 'Community Gathering', 'Annual community meetup', 1, '2025-01-24 10:00:00', 1000, 'Includes refreshments', 1, NOW(), NOW())
+;
+
+INSERT INTO public.hall ("sabhaId", name, area, terms, note, "pricePerDay", "isDeleted", "createdAt")
+VALUES 
+(1, 'Gamini City Hall', 'Gamini City', 'Open for community events', 'Reserved for weekends only', 500, false, NOW()),
+(1, 'Riverside Hall', 'Riverside Ground', 'Available for sports activities', 'Booking required in advance', 300, false, NOW());
+
+INSERT INTO public."hallReservation" 
+("userId", "event", description, "hallId", "reservationDate", payment, note, status, "createdAt", "updatedAt")
+VALUES 
+(1, 'Community Gathering', 'Annual community meetup', 1, '2025-01-20 10:00:00', 1000, 'Includes refreshments', 0, NOW(), NOW()),
+(1, 'Colors Night', 'Annual colors night event', 1, '2025-01-25 14:00:00', 1500, 'Requires setup of goalposts', 0, NOW(), NOW()),
+(1, 'Community Gathering-Back to School', 'Annual community meetup', 1, '2025-01-24 10:00:00', 1000, 'Includes refreshments', 1, NOW(), NOW())
 ;

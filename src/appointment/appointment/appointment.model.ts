@@ -109,7 +109,7 @@ export class Appointment extends Model<Appointment> {
     type: DataType.INTEGER,
     allowNull: false,
   })
-  status: number; // 0 - Booked, 1 - Cancelled, 2 - Pending, 3 - Completed
+  status: number; // 0 - Booked, 1 - Cancelled, 2 - Ongoing, 3 - Completed
 
   @CreatedAt
   @Column({
@@ -123,6 +123,30 @@ export class Appointment extends Model<Appointment> {
     type: DataType.DATE,
   })
   updatedAt: Date;
+
+  @Column({
+    type: DataType.TEXT,
+    allowNull: true,
+  })
+  bcNote: string;
+
+  @Column({
+    type: DataType.TEXT,
+    allowNull: true,
+  })
+  tcNote: string;
+
+  @Column({
+    type: DataType.TEXT,
+    allowNull: true,
+  })
+  ocNote: string;
+
+  @Column({
+    type: DataType.TEXT,
+    allowNull: true,
+  })
+  ucNote: string;
 
   @Column({
     type: DataType.TEXT,

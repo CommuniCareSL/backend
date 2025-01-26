@@ -1,12 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Appointment } from './appointment.model';
-
+import { User } from 'src/user/user.model';
+import { Op } from 'sequelize';
+import { Sequelize } from 'sequelize-typescript';
 @Injectable()
 export class AppointmentService {
   constructor(
     @InjectModel(Appointment)
     private appointmentModel: typeof Appointment,
+    @InjectModel(User)
+    private userModel: typeof User,
   ) {}
 
   async checkTimeSlotAvailability(
@@ -71,5 +75,226 @@ export class AppointmentService {
       console.error('Failed to book appointment:', error);
       throw new Error('Failed to book appointment');
     }
+  }
+
+
+  // Get all appointments with status = 0, from the day after tomorrow onwards, ordered by creation date DESC
+  async getBookedAppointments(sabhaId: number, departmentId: number) {
+    const dayAfterTomorrow = new Date();
+    dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 2); // Day after tomorrow
+    dayAfterTomorrow.setHours(0, 0, 0, 0); // Start of the day
+
+    return this.appointmentModel.findAll({
+      where: {
+        sabhaId,
+        departmentId,
+        status: 0,
+        date: {
+          [Op.gte]: dayAfterTomorrow, // Only appointments from the day after tomorrow onwards
+        },
+      },
+      order: [['date', 'ASC']], // Order by creation date in descending order
+      include: [
+        {
+          model: this.userModel,
+          attributes: ['fullName'], // Include the user's full name
+        },
+      ],
+    });
+  }
+
+  // Get appointment details by ID, including the user's full name
+  async getBookedAppointmentDetails(appointmentId: number) {
+    return this.appointmentModel.findOne({
+      where: { appointmentId },
+      include: [
+        {
+          model: this.userModel,
+          attributes: ['fullName'], // Include the user's full name
+        },
+      ],
+    });
+  }
+
+  async cancelBookedAppointment(appointmentId: number, cancelReason: string) {
+    const appointment = await this.appointmentModel.findByPk(appointmentId);
+    if (!appointment) {
+      throw new Error('Appointment not found');
+    }
+
+    // Update status to 1 (cancelled) and save the cancellation reason
+    appointment.status = 1;
+    appointment.bcNote = cancelReason; // Save the cancellation reason in the note field
+    await appointment.save();
+
+    return appointment;
+  }
+
+
+  async getTodayAppointments(sabhaId: number, departmentId: number) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Start of the day
+  
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1); // Start of the next day
+  
+    return this.appointmentModel.findAll({
+      where: {
+        sabhaId,
+        departmentId,
+        status: 0, // Assuming status 0 means "scheduled"
+        date: {
+          [Op.gte]: today, // Greater than or equal to today
+          [Op.lt]: tomorrow, // Less than tomorrow (i.e., today only)
+        },
+      },
+      order: [['timeSlot', 'ASC']], // Order by date in ascending order
+      include: [
+        {
+          model: this.userModel,
+          attributes: ['fullName'], // Include the user's full name
+        },
+      ],
+    });
+  }
+
+  // Get appointment details by ID, including the user's full name
+  async getTodayAppointmentDetails(appointmentId: number) {
+    return this.appointmentModel.findOne({
+      where: { appointmentId },
+      include: [
+        {
+          model: this.userModel,
+          attributes: ['fullName'], // Include the user's full name
+        },
+      ],
+    });
+  }
+
+  async cancelTodayAppointment(appointmentId: number, cancelReason: string) {
+    const appointment = await this.appointmentModel.findByPk(appointmentId);
+    if (!appointment) {
+      throw new Error('Appointment not found');
+    }
+
+    // Update status to 1 (cancelled) and save the cancellation reason
+    appointment.status = 1;
+    appointment.tcNote = cancelReason; // Save the cancellation reason in the note field
+    await appointment.save();
+
+    return appointment;
+  }
+
+  async startTodayAppointment(appointmentId: number) {
+    const appointment = await this.appointmentModel.findByPk(appointmentId);
+    if (!appointment) {
+      throw new Error('Appointment not found');
+    }
+
+    // Update status to "ongoing" (e.g., status = 2)
+    appointment.status = 2; // Assuming 2 represents "ongoing"
+    await appointment.save();
+
+    return appointment;
+  }
+
+  // Get all ongoing appointments (status = 2)
+  async getOngoingAppointments(sabhaId: number, departmentId: number) {
+    return this.appointmentModel.findAll({
+      where: {
+        sabhaId,
+        departmentId,
+        status: 2, // Ongoing appointments
+      },
+      order: [['date', 'ASC']], // Order by date in ascending order
+      include: [
+        {
+          model: this.userModel,
+          attributes: ['fullName'], // Include the user's full name
+        },
+      ],
+    });
+  }
+
+  // Get details of a specific ongoing appointment
+  async getOngoingAppointmentDetails(appointmentId: number) {
+    return this.appointmentModel.findOne({
+      where: { appointmentId, status: 2 }, // Ensure the appointment is ongoing
+      include: [
+        {
+          model: this.userModel,
+          attributes: ['fullName'], // Include the user's full name
+        },
+      ],
+    });
+  }
+
+  // Mark an ongoing appointment as completed (status = 3)
+  async completeOngoingAppointment(appointmentId: number) {
+    const appointment = await this.appointmentModel.findByPk(appointmentId);
+    if (!appointment) {
+      throw new Error('Appointment not found');
+    }
+
+    // Update status to 3 (completed)
+    appointment.status = 3;
+    await appointment.save();
+
+    return appointment;
+  }
+
+  async cancelOngoingAppointment(appointmentId: number, cancelReason: string) {
+    const appointment = await this.appointmentModel.findByPk(appointmentId);
+    if (!appointment) {
+      throw new Error('Appointment not found');
+    }
+
+    // Update status to 1 (cancelled) and save the cancellation reason
+    appointment.status = 1;
+    appointment.ocNote = cancelReason; // Save the cancellation reason in the note field
+    await appointment.save();
+
+    return appointment;
+  }
+
+  // Get all canceled (status = 3) and completed (status = 1) appointments
+  async getCanceledOrCompletedAppointments(
+    sabhaId: number,
+    departmentId: number,
+  ) {
+    return this.appointmentModel.findAll({
+      where: {
+        sabhaId,
+        departmentId,
+        status: {
+          [Op.or]: [1, 3], // Status = 1 (completed) or 3 (canceled)
+        },
+      },
+      order: [['createdAt', 'DESC']], // Order by creation date in descending order
+      include: [
+        {
+          model: this.userModel,
+          attributes: ['fullName'], // Include the user's full name
+        },
+      ],
+    });
+  }
+
+  // Get details of a specific canceled or completed appointment by ID
+  async getCanceledOrCompletedAppointmentDetails(appointmentId: number) {
+    return this.appointmentModel.findOne({
+      where: {
+        appointmentId,
+        status: {
+          [Op.or]: [1, 3], // Status = 1 (completed) or 3 (canceled)
+        },
+      },
+      include: [
+        {
+          model: this.userModel,
+          attributes: ['fullName'], // Include the user's full name
+        },
+      ],
+    });
   }
 }

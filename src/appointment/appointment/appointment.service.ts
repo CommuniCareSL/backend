@@ -1,12 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Appointment } from './appointment.model';
-
+import { User } from 'src/user/user.model';
+import { Op } from 'sequelize';
+import { Sequelize } from 'sequelize-typescript';
 @Injectable()
 export class AppointmentService {
   constructor(
     @InjectModel(Appointment)
     private appointmentModel: typeof Appointment,
+    @InjectModel(User)
+    private userModel: typeof User,
   ) {}
 
   async checkTimeSlotAvailability(
@@ -71,5 +75,44 @@ export class AppointmentService {
       console.error('Failed to book appointment:', error);
       throw new Error('Failed to book appointment');
     }
+  }
+
+
+  // Get all appointments with status = 0, from the day after tomorrow onwards, ordered by creation date DESC
+  async getBookedAppointments(sabhaId: number, departmentId: number) {
+    const dayAfterTomorrow = new Date();
+    dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 2); // Day after tomorrow
+    dayAfterTomorrow.setHours(0, 0, 0, 0); // Start of the day
+
+    return this.appointmentModel.findAll({
+      where: {
+        sabhaId,
+        departmentId,
+        status: 0,
+        date: {
+          [Op.gte]: dayAfterTomorrow, // Only appointments from the day after tomorrow onwards
+        },
+      },
+      order: [['date', 'ASC']], // Order by creation date in descending order
+      include: [
+        {
+          model: this.userModel,
+          attributes: ['fullName'], // Include the user's full name
+        },
+      ],
+    });
+  }
+
+  // Get appointment details by ID, including the user's full name
+  async getBookedAppointmentDetails(appointmentId: number) {
+    return this.appointmentModel.findOne({
+      where: { appointmentId },
+      include: [
+        {
+          model: this.userModel,
+          attributes: ['fullName'], // Include the user's full name
+        },
+      ],
+    });
   }
 }

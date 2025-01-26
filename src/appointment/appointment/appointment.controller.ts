@@ -31,4 +31,21 @@ export class AppointmentController {
   }) {
     return this.appointmentService.bookAppointment(bookingData);
   }
+
+
+
+  // Get all appointments with status = 0, from the day after tomorrow onwards, ordered by creation date DESC
+  @Get()
+  async getBookedAppointments(
+    @Query('sabhaId') sabhaId: number,
+    @Query('departmentId') departmentId: number,
+  ) {
+    return this.appointmentService.getBookedAppointments(sabhaId, departmentId);
+  }
+
+  // Get appointment details by ID, including the user's full name
+  @Get('/:id')
+  async getBookedAppointmentDetails(@Param('id') appointmentId: number) {
+    return this.appointmentService.getBookedAppointmentDetails(appointmentId);
+  }
 }

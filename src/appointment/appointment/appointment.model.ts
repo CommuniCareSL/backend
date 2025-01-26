@@ -128,5 +128,29 @@ export class Appointment extends Model<Appointment> {
     type: DataType.TEXT,
     allowNull: true,
   })
+  bcNote: string;
+
+  @Column({
+    type: DataType.TEXT,
+    allowNull: true,
+  })
+  tcNote: string;
+
+  @Column({
+    type: DataType.TEXT,
+    allowNull: true,
+  })
+  ocNote: string;
+
+  @Column({
+    type: DataType.TEXT,
+    allowNull: true,
+  })
+  ucNote: string;
+
+  @Column({
+    type: DataType.TEXT,
+    allowNull: true,
+  })
   msg: string;
 }

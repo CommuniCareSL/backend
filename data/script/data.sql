@@ -23,7 +23,7 @@ VALUES
 ('Health Division'),
 ('Account Division'),
 ('Work and Plan Division'),
-('Development Division');
+-- ('Development Division');
 
 -- user
 INSERT INTO public."user" ("userId", "fullName", "idNumber", "phoneNumber", district, "sabhaId", email, "password", "role", "isBlock", "isDelete") 
@@ -41,14 +41,14 @@ VALUES
 ('health@colombo', '456 Oak Avenue, Colombo', '987654321V', 'Colombo', 2, 'Jane Doe', '12345678', 'employee', 3),
 ('account@colombo', '789 Pine Street, Colombo', '111223344V', 'Colombo', 2, 'Mary Jane', '12345678', 'employee', 4),
 ('workplan@colombo', '101 Maple Road, Colombo', '222334455V', 'Colombo', 2, 'Mark Smith', '12345678', 'employee', 5),
-('development@colombo', '202 Birch Street, Colombo', '333445566V', 'Colombo', 2, 'Lucy White', '12345678', 'employee', 6),
+-- ('development@colombo', '202 Birch Street, Colombo', '333445566V', 'Colombo', 2, 'Lucy White', '12345678', 'employee', 6),
 
 -- sabhaId = 3, district = Dehiwala
 ('admin@dehiwala', '303 Cedar Lane, Colombo', '444556677V', 'Colombo', 3, 'Susan Green', '12345678', 'employee', 2),
 ('health@dehiwala', '404 Cherry Avenue, Colombo', '555667788V', 'Colombo', 3, 'Michael Brown', '12345678', 'employee', 3),
 ('account@dehiwala', '505 Ash Road, Colombo', '666778899V', 'Colombo', 3, 'Emily Jones', '12345678', 'employee', 4),
 ('workplan@dehiwala', '606 Palm Street, Colombo', '777889900V', 'Colombo', 3, 'Oliver Martin', '12345678', 'employee', 5),
-('development@dehiwala', '707 Willow Road, Colombo', '888990011V', 'Colombo', 3, 'Amelia Clark', '12345678', 'employee', 6);
+-- ('development@dehiwala', '707 Willow Road, Colombo', '888990011V', 'Colombo', 3, 'Amelia Clark', '12345678', 'employee', 6);
 
 
 

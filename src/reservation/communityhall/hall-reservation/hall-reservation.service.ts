@@ -1,46 +1,37 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { HallReservation } from './hall-reservation.model';
+import { Hall } from '../hall/hall.model';
 
 @Injectable()
 export class HallReservationService {
   constructor(
     @InjectModel(HallReservation)
     private hallReservationModel: typeof HallReservation,
+    @InjectModel(Hall) private hallModel: typeof Hall,
   ) {}
 
-  // Fetch booked dates with status = 0 for a specific hall
   async getBookedDatesByHallId(hallId: number): Promise<string[]> {
     const reservations = await this.hallReservationModel.findAll({
-      where: {
-        hallId,
-        status: 0, // Only booked reservations
-      },
+      where: { hallId, status: 0 },
       attributes: ['reservationDate'],
     });
-
-    return reservations.map((reservation) =>
-      reservation.reservationDate.toISOString().split('T')[0],
-    );
+    return reservations.map(r => r.reservationDate.toISOString().split('T')[0]);
   }
 
-  // Create single-date reservation
   async createReservation(reservationData: any): Promise<HallReservation> {
-    const { dates, totalPayment, ...rest } = reservationData;
+    const { date, totalPayment, hallId } = reservationData;
+    
+    if (!date) throw new Error('Date is required');
+    
+    const hall = await this.hallModel.findByPk(hallId);
+    if (!hall) throw new Error('Hall not found');
+    if (hall.pricePerDay !== totalPayment) throw new Error('Payment mismatch');
 
-    // Validation checks
-    if (!dates || !Array.isArray(dates) || dates.length === 0) {
-      throw new Error('At least one valid date is required');
-    }
-    if (!totalPayment || isNaN(totalPayment)) {
-      throw new Error('Valid total payment is required');
-    }
-
-    // Create single reservation
     return this.hallReservationModel.create({
-      ...rest,
-      reservationDate: dates[0], // Use first date from array
-      payment: totalPayment, // Use full amount directly
+      ...reservationData,
+      reservationDate: date,
+      payment: totalPayment,
       status: 0,
     });
   }

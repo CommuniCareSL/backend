@@ -112,4 +112,22 @@ export class AppointmentController {
   ) {
     return this.appointmentService.cancelOngoingAppointment(appointmentId, cancelReason);
   }
+
+  // Get all canceled (status = 3) and completed (status = 1) appointments
+  @Get('canceled-or-completed')
+  async getCanceledOrCompletedAppointments(
+    @Query('sabhaId') sabhaId: number,
+    @Query('departmentId') departmentId: number,
+  ) {
+    return this.appointmentService.getCanceledOrCompletedAppointments(
+      sabhaId,
+      departmentId,
+    );
+  }
+
+  // Get details of a specific canceled or completed appointment by ID
+  @Get('canceled-or-completed/:id')
+  async getCanceledOrCompletedAppointmentDetails(@Param('id') id: number) {
+    return this.appointmentService.getCanceledOrCompletedAppointmentDetails(id);
+  }
 }

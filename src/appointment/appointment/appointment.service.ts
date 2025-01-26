@@ -256,4 +256,45 @@ export class AppointmentService {
 
     return appointment;
   }
+
+  // Get all canceled (status = 3) and completed (status = 1) appointments
+  async getCanceledOrCompletedAppointments(
+    sabhaId: number,
+    departmentId: number,
+  ) {
+    return this.appointmentModel.findAll({
+      where: {
+        sabhaId,
+        departmentId,
+        status: {
+          [Op.or]: [1, 3], // Status = 1 (completed) or 3 (canceled)
+        },
+      },
+      order: [['createdAt', 'DESC']], // Order by creation date in descending order
+      include: [
+        {
+          model: this.userModel,
+          attributes: ['fullName'], // Include the user's full name
+        },
+      ],
+    });
+  }
+
+  // Get details of a specific canceled or completed appointment by ID
+  async getCanceledOrCompletedAppointmentDetails(appointmentId: number) {
+    return this.appointmentModel.findOne({
+      where: {
+        appointmentId,
+        status: {
+          [Op.or]: [1, 3], // Status = 1 (completed) or 3 (canceled)
+        },
+      },
+      include: [
+        {
+          model: this.userModel,
+          attributes: ['fullName'], // Include the user's full name
+        },
+      ],
+    });
+  }
 }

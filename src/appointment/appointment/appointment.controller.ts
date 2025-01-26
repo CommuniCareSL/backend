@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
+import { Controller, Get, Put, Post, Body, Param, Query } from '@nestjs/common';
 import { AppointmentService } from './appointment.service';
 
 @Controller('appointment')
@@ -47,5 +47,13 @@ export class AppointmentController {
   @Get('/:id')
   async getBookedAppointmentDetails(@Param('id') appointmentId: number) {
     return this.appointmentService.getBookedAppointmentDetails(appointmentId);
+  }
+
+  @Put('/:id/cancel')
+  async cancelBookedAppointment(
+    @Param('id') appointmentId: number,
+    @Body('cancelReason') cancelReason: string,
+  ) {
+    return this.appointmentService.cancelBookedAppointment(appointmentId, cancelReason);
   }
 }

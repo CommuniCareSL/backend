@@ -115,4 +115,18 @@ export class AppointmentService {
       ],
     });
   }
+
+  async cancelBookedAppointment(appointmentId: number, cancelReason: string) {
+    const appointment = await this.appointmentModel.findByPk(appointmentId);
+    if (!appointment) {
+      throw new Error('Appointment not found');
+    }
+
+    // Update status to 1 (cancelled) and save the cancellation reason
+    appointment.status = 1;
+    appointment.bcNote = cancelReason; // Save the cancellation reason in the note field
+    await appointment.save();
+
+    return appointment;
+  }
 }

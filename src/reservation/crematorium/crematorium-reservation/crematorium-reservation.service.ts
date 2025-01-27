@@ -19,7 +19,7 @@ export class CrematoriumReservationService {
     const reservations = await this.reservationModel.findAll({
       where: {
         crematoriumId,
-        funeralDate: date, // Use date string directly
+        funeralDate: date,
         status: 0
       },
       attributes: ['timeSlot'],
@@ -35,11 +35,10 @@ export class CrematoriumReservationService {
       throw new Error('Payment amount mismatch');
     }
 
-    // Check for existing reservation
     const existingReservation = await this.reservationModel.findOne({
       where: {
         crematoriumId: reservationData.crematoriumId,
-        funeralDate: reservationData.funeralDate, // Use date string directly
+        funeralDate: reservationData.funeralDate,
         timeSlot: reservationData.timeSlot,
         status: 0
       }
@@ -51,6 +50,7 @@ export class CrematoriumReservationService {
 
     return this.reservationModel.create({
       ...reservationData,
+      reservationDate: new Date().toISOString().split('T')[0],
       status: 0
     });
   }

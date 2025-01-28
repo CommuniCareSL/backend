@@ -57,4 +57,39 @@ export class AdminChartService {
 
         return statusCounts;
     }
+
+    async getComplaintDataBySabhaId(sabhaId: number) {
+        const complaints = await this.complaintModel.findAll({
+            where: { sabhaId },
+            attributes: ['status', 'createdAt'],
+        });
+
+        // Process the data to group by month and status
+        const data = this.processComplaintData(complaints);
+        return data;
+    }
+
+    private processComplaintData(complaints: any[]) {
+        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        const data = {
+            labels: months,
+            datasets: [
+                { label: 'Pending', data: new Array(12).fill(0) },
+                { label: 'In Progress', data: new Array(12).fill(0) },
+                { label: 'Resolved', data: new Array(12).fill(0) },
+                { label: 'Rejected', data: new Array(12).fill(0) },
+            ],
+        };
+
+        complaints.forEach(complaint => {
+            const month = new Date(complaint.createdAt).getMonth();
+            const status = complaint.status;
+
+            if (status >= 0 && status <= 3) {
+                data.datasets[status].data[month]++;
+            }
+        });
+
+        return data;
+    }
 }

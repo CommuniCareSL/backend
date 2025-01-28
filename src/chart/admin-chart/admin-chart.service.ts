@@ -4,6 +4,8 @@ import { Sabha } from '../../sabha/sabha.model';
 import { User } from 'src/user/user.model';
 import { Complaint } from 'src/complaint/complaint/complaint.model';
 import { Op } from 'sequelize';
+import { Sequelize } from 'sequelize-typescript';
+import { QueryTypes } from 'sequelize';
 
 @Injectable()
 export class AdminChartService {
@@ -11,6 +13,7 @@ export class AdminChartService {
         @InjectModel(Sabha) private sabhaModel: typeof Sabha,
         @InjectModel(User) private userModel: typeof User,
         @InjectModel(Complaint) private complaintModel: typeof Complaint,
+        private sequelize: Sequelize,
     ) {}
 
     async getComplaintCountsByStatus(sabhaId: number) {
@@ -92,4 +95,35 @@ export class AdminChartService {
 
         return data;
     }
+
+    async getWeeklyComplaints(sabhaId: number): Promise<{ [key: string]: number }> {
+        const query = `
+          SELECT
+            TO_CHAR("createdAt", 'Dy') AS day,
+            COUNT(*) AS count
+            FROM
+            complaint
+            WHERE
+            "sabhaId" = :sabhaId
+            AND "createdAt" >= (CURRENT_DATE - INTERVAL '7 days')
+            GROUP BY
+            day
+            ORDER BY
+            MIN("createdAt");
+        `;
+    
+        // Use type assertion to define the structure of the query results
+        const results = await this.sequelize.query<{ day: string; count: number }>(query, {
+          replacements: { sabhaId },
+          type: QueryTypes.SELECT,
+        });
+    
+        // Use inline type definition for the reduce function
+        const weeklyComplaints = results.reduce<{ [key: string]: number }>((acc, { day, count }) => {
+          acc[day] = count;
+          return acc;
+        }, {});
+    
+        return weeklyComplaints;
+      }
 }

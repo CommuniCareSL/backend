@@ -33,4 +33,11 @@ export class GroundReservationController {
   ) {
     return this.groundReservationService.rejectReservation(reservationId, data.note);
   }
+
+  @Get('previous-and-canceled-reservations/:sabhaId')
+    async getPreviousAndCanceledReservations(
+        @Param('sabhaId', ParseIntPipe) sabhaId: number
+    ) {
+        return this.groundReservationService.getPreviousAndCanceledReservationsBySabhaId(sabhaId);
+    }
 }

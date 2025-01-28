@@ -132,4 +132,69 @@ export class GroundReservationService {
       throw error;
     }
   }
+
+  async getPreviousAndCanceledReservationsBySabhaId(sabhaId: number): Promise<{
+    previousReservations: GroundReservation[];
+    canceledReservations: GroundReservation[];
+}> {
+    // Step 1: Get all ground IDs for the sabha
+    const grounds = await this.groundModel.findAll({
+        where: { sabhaId },
+        attributes: ['groundId'],
+    });
+    const groundIds = grounds.map(ground => ground.groundId);
+
+    // Step 2: Get current date at start of day
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Step 3: Fetch both types of reservations in parallel
+    const [previousReservations, canceledReservations] = await Promise.all([
+        // Get previous active reservations (status = 0)
+        this.groundReservationModel.findAll({
+            where: {
+                groundId: groundIds,
+                status: 0,
+                reservationDate: {
+                    [Op.lt]: today, // Less than today
+                },
+            },
+            include: [
+                {
+                    model: User,
+                    attributes: ['userId', 'fullName'],
+                },
+                {
+                    model: Ground,
+                    attributes: ['groundId', 'name'],
+                },
+            ],
+            order: [['reservationDate', 'DESC']], // Most recent first
+        }),
+
+        // Get all canceled reservations (status = 1)
+        this.groundReservationModel.findAll({
+            where: {
+                groundId: groundIds,
+                status: 1,
+            },
+            include: [
+                {
+                    model: User,
+                    attributes: ['userId', 'fullName'],
+                },
+                {
+                    model: Ground,
+                    attributes: ['groundId', 'name'],
+                },
+            ],
+            order: [['reservationDate', 'DESC']], // Most recent first
+        }),
+    ]);
+
+    return {
+        previousReservations,
+        canceledReservations,
+    };
+}
 }

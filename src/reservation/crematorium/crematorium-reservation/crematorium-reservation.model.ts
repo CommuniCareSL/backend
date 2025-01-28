@@ -8,12 +8,11 @@ import {
   ForeignKey,
   BelongsTo,
   Default,
-  CreatedAt,
 } from 'sequelize-typescript';
 import { User } from '../../../user/user.model';
 import { Crematorium } from '../crematorium/crematorium.model';
 
-@Table({ tableName: 'crematoriumReservation', timestamps: false })
+@Table({ tableName: 'crematoriumReservation', timestamps: true }) // Enable timestamps
 export class CrematoriumReservation extends Model<CrematoriumReservation> {
   @PrimaryKey
   @AutoIncrement
@@ -41,7 +40,7 @@ export class CrematoriumReservation extends Model<CrematoriumReservation> {
   deceasedAddress: string;
 
   @Column({
-    type: DataType.DATEONLY, // Changed to DATEONLY
+    type: DataType.DATEONLY,
     allowNull: false,
   })
   dateOfDeath: Date;
@@ -56,7 +55,7 @@ export class CrematoriumReservation extends Model<CrematoriumReservation> {
   relationship: string;
 
   @Column({
-    type: DataType.DATEONLY, // Changed to DATEONLY
+    type: DataType.DATEONLY,
     allowNull: false,
   })
   funeralDate: Date;
@@ -71,7 +70,10 @@ export class CrematoriumReservation extends Model<CrematoriumReservation> {
   @Column(DataType.INTEGER)
   status: number;
 
-  @CreatedAt
-  @Column(DataType.DATE)
-  createdAt: Date;
+  @Column({
+    type: DataType.DATEONLY,
+    allowNull: false,
+  })
+  reservationDate: string;
+
 }

@@ -10,7 +10,8 @@ describe('CrematoriumReservationService', () => {
   beforeEach(async () => {
     mockModel = {
       findAll: jest.fn(),
-      create: jest.fn()
+      create: jest.fn(),
+      findOne: jest.fn(),
     } as any;
 
     const module: TestingModule = await Test.createTestingModule({
@@ -42,7 +43,7 @@ describe('CrematoriumReservationService', () => {
       expect(mockModel.findAll).toHaveBeenCalledWith({
         where: {
           crematoriumId: 1,
-          funeralDate: new Date('2023-10-01'),
+          funeralDate: '2023-10-01',
           status: 0
         },
         attributes: ['timeSlot']
@@ -51,13 +52,14 @@ describe('CrematoriumReservationService', () => {
   });
 
   describe('createReservation', () => {
-    it('should create reservation with status 0', async () => {
+    it('should create reservation with status 0 and reservationDate', async () => {
       const mockData = { crematoriumId: 1 };
       (mockModel.create as jest.Mock).mockResolvedValue(mockData);
-
+      
       await service.createReservation(mockData);
       expect(mockModel.create).toHaveBeenCalledWith({
         ...mockData,
+        reservationDate: expect.stringMatching(/\d{4}-\d{2}-\d{2}/),
         status: 0
       });
     });

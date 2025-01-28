@@ -2,8 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Appointment } from './appointment.model';
 import { User } from 'src/user/user.model';
+import { Sabha } from '../../sabha/sabha.model';
+import { Department } from '../../department/department.model';
 import { Op } from 'sequelize';
 import { Sequelize } from 'sequelize-typescript';
+
 @Injectable()
 export class AppointmentService {
   constructor(
@@ -295,6 +298,27 @@ export class AppointmentService {
           attributes: ['fullName'], // Include the user's full name
         },
       ],
+    });
+  }
+// status chinthanaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+  async getUserAppointments(userId: number): Promise<Appointment[]> {
+    return this.appointmentModel.findAll({
+      where: { userId },
+      include: [
+        {
+          model: this.userModel,
+          attributes: ['fullName'],
+        },
+        {
+          model: Sabha,
+          attributes: ['sabhaName'],
+        },
+        {
+          model: Department,
+          attributes: ['departmentName'],
+        },
+      ],
+      order: [['date', 'DESC']],
     });
   }
 }

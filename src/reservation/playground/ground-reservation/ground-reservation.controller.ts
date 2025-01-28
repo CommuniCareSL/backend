@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Body } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body,Put,ParseIntPipe } from '@nestjs/common';
 import { GroundReservationService } from './ground-reservation.service';
 
 @Controller('ground-reservation')
@@ -18,4 +18,26 @@ export class GroundReservationController {
     console.log('Request Body:', reservationData); // Log the request body
     return this.groundReservationService.createReservation(reservationData);
   }
+
+
+
+  @Get('active-reservations/:sabhaId')
+  async getActiveReservations(@Param('sabhaId') sabhaId: number) {
+    return this.groundReservationService.getActiveReservationsBySabhaId(sabhaId);
+  }
+
+  @Put('reject/:reservationId')
+  async rejectReservation(
+    @Param('reservationId', ParseIntPipe) reservationId: number,
+    @Body() data: { note: string }
+  ) {
+    return this.groundReservationService.rejectReservation(reservationId, data.note);
+  }
+
+  @Get('previous-and-canceled-reservations/:sabhaId')
+    async getPreviousAndCanceledReservations(
+        @Param('sabhaId', ParseIntPipe) sabhaId: number
+    ) {
+        return this.groundReservationService.getPreviousAndCanceledReservationsBySabhaId(sabhaId);
+    }
 }

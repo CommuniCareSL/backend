@@ -130,4 +130,8 @@ export class AppointmentController {
   async getCanceledOrCompletedAppointmentDetails(@Param('id') id: number) {
     return this.appointmentService.getCanceledOrCompletedAppointmentDetails(id);
   }
+  @Get('user')
+async getUserAppointments(@Query('userId') userId: number) {
+  return this.appointmentService.getUserAppointments(userId);
+}
 }

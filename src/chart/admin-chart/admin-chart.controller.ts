@@ -10,4 +10,9 @@ export class AdminChartController {
     async getComplaintCounts(@Param('sabhaId') sabhaId: number) {
         return this.adminChartService.getComplaintCountsByStatus(sabhaId);
     }
+
+    @Get('monthly/:sabhaId')
+    async getComplaintData(@Param('sabhaId') sabhaId: number) {
+        return this.adminChartService.getComplaintDataBySabhaId(sabhaId);
+    }
 }

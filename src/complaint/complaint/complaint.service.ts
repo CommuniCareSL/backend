@@ -299,4 +299,53 @@ private findSabhaIdByArea(area: string): number {
     await complaint.save(); // Save the updated complaint
     return complaint;
   }
+
+  // status chinthanaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+async getComplaintsByUser(userId: number) {
+  try {
+    const complaints = await this.complaintModel.findAll({
+      where: { userId },
+      include: [
+        {
+          model: ComplaintCategory,
+          attributes: ['name'],
+          required: true,
+        },
+        {
+          model: Sabha,
+          attributes: ['sabhaName'],
+          required: true,
+        },
+        {
+          model: User,
+          attributes: ['fullName'],
+        }
+      ],
+      order: [['createdAt', 'DESC']],
+    });
+
+    return complaints.map(complaint => ({
+      id: complaint.complaintId,
+      type: complaint.complaintCategory.name,
+      sabhaName: complaint.sabha.sabhaName,
+      status: this.mapStatus(complaint.status),
+      description: complaint.description,
+      createdAt: complaint.createdAt,
+      updatedAt: complaint.updatedAt,
+    }));
+  } catch (error) {
+    console.error('Error fetching user complaints:', error);
+    throw error;
+  }
+}
+
+private mapStatus(status: number): string {
+  switch(status) {
+    case 0: return 'Pending';
+    case 1: return 'Rejected';
+    case 2: return 'Ongoing';
+    case 3: return 'Completed';
+    default: return 'Unknown';
+  }
+}
 }

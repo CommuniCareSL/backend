@@ -125,4 +125,13 @@ export class UserService {
 
     return user; // Return the updated user
   }
+
+  async findAll(sabhaId: number): Promise<User[]> {
+    return this.userModel.findAll({
+      where: {
+        sabhaId, // Filter by sabhaId
+        isBlock: false, // Only fetch users where isBlock is false
+      },
+    });
+  }
 }

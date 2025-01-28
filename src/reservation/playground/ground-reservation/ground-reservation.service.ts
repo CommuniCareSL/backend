@@ -1,12 +1,19 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { GroundReservation } from './ground-reservation.model';
+import { Ground } from '../ground/ground.model';
+import { User } from 'src/user/user.model';
+import { Op } from 'sequelize'; 
 
 @Injectable()
 export class GroundReservationService {
   constructor(
     @InjectModel(GroundReservation)
     private groundReservationModel: typeof GroundReservation,
+    @InjectModel(Ground)
+    private groundModel: typeof Ground,
+    @InjectModel(User)
+    private userModel: typeof User,    
   ) {}
 
   // Fetch booked dates with status = 0 for a specific ground
@@ -49,5 +56,80 @@ export class GroundReservationService {
     );
 
     return reservations;
+  }
+
+
+  async getActiveReservationsBySabhaId(sabhaId: number): Promise<GroundReservation[]> {
+    // Step 1: Fetch all groundIds associated with the given sabhaId
+    const grounds = await this.groundModel.findAll({
+      where: { sabhaId },
+      attributes: ['groundId'], // Only fetch the groundId
+    });
+
+    const groundIds = grounds.map(ground => ground.groundId);
+
+    // Step 2: Calculate the date for the day after tomorrow
+    const today = new Date();
+    const dayAfterTomorrow = new Date(today);
+    dayAfterTomorrow.setDate(today.getDate() + 3); // Add 3 days to today's date
+    dayAfterTomorrow.setHours(0, 0, 0, 0); // Set time to 00:00:00 for comparison
+
+    // Step 3: Fetch all reservations with status = 0, groundId in groundIds, and reservationDate >= dayAfterTomorrow
+    const reservations = await this.groundReservationModel.findAll({
+      where: {
+        groundId: groundIds,
+        status: 0,
+        reservationDate: {
+          [Op.gte]: dayAfterTomorrow, // Only include reservations from the day after tomorrow onwards
+        },
+      },
+      include: [
+        {
+          model: User,
+          attributes: ['userId', 'fullName'], // Include user's fullName
+        },
+        {
+          model: Ground,
+          attributes: ['groundId', 'name'], // Include ground details
+        },
+      ],
+    });
+
+    return reservations;
+  }
+
+  async rejectReservation(reservationId: number, note: string) {
+    try {
+      const reservation = await this.groundReservationModel.findByPk(reservationId);
+
+      if (!reservation) {
+        throw new NotFoundException(`Reservation with ID ${reservationId} not found`);
+      }
+
+      // Check if reservation date is within 2 days
+      const reservationDate = new Date(reservation.reservationDate);
+      const currentDate = new Date();
+      const timeDifference = reservationDate.getTime() - currentDate.getTime();
+      const daysDifference = timeDifference / (1000 * 3600 * 24);
+
+      if (daysDifference <= 2) {
+        throw new Error('Cannot reject reservations that are within 2 days of the reservation date');
+      }
+
+      // Update the reservation
+      await reservation.update({
+        status: 1, // Cancelled
+        note: note,
+        updatedAt: new Date(),
+      });
+
+      return {
+        message: 'Reservation rejected successfully',
+        reservation,
+      };
+    } catch (error) {
+      console.error('Error rejecting reservation:', error);
+      throw error;
+    }
   }
 }

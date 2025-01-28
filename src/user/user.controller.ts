@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param, Patch } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Patch, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.model'; 
 
@@ -45,5 +45,10 @@ export class UserController {
   @Patch('/:userId/block') // Define a PATCH endpoint for blocking/unblocking a user
   async blockUser(@Param('userId') userId: number,@Body('isBlock') isBlock: boolean,) {
     return this.userService.updateBlockStatus(userId, isBlock);
+  }
+
+  @Get('all')//by sabhaId
+  async findAll(@Query('sabhaId') sabhaId: number): Promise<User[]> {
+    return this.userService.findAll(sabhaId);
   }
 }

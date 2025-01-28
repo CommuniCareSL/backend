@@ -112,4 +112,20 @@ export class ComplaintController {
       throw error;
     }
   }
+
+
+  // status chinthanaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+@Get('/user/:userId')
+async getUserComplaints(@Param('userId') userId: number) {
+  try {
+    const complaints = await this.complaintService.getComplaintsByUser(userId);
+    return {
+      message: 'User complaints fetched successfully',
+      complaints,
+    };
+  } catch (error) {
+    console.error('Error fetching user complaints:', error);
+    throw error;
+  }
+}
 }

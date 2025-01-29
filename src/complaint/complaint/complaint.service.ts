@@ -342,9 +342,9 @@ async getComplaintsByUser(userId: number) {
 private mapStatus(status: number): string {
   switch(status) {
     case 0: return 'Pending';
-    case 1: return 'Rejected';
-    case 2: return 'Ongoing';
-    case 3: return 'Completed';
+    case 1: return 'Ongoing';
+    case 2: return 'Completed';
+    case 3: return 'Cancelled';
     default: return 'Unknown';
   }
 }

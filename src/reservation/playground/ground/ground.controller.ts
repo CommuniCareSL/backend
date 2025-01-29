@@ -1,4 +1,4 @@
-import { Controller, Get, Param, NotFoundException } from '@nestjs/common';
+import { Controller, Get,Put,Delete,Body,Post, Param, NotFoundException } from '@nestjs/common';
 import { GroundService } from './ground.service';
 import { Ground } from './ground.model';
 
@@ -20,5 +20,28 @@ export class GroundController {
     return grounds;
   }
 
-  
+  @Post()
+  async createGround(@Body() groundData: Partial<Ground>): Promise<Ground> {
+    return this.groundService.createGround(groundData);
+  }
+
+  @Put(':id')
+  async updateGround(
+    @Param('id') groundId: number,
+    @Body() groundData: Partial<Ground>,
+  ): Promise<Ground> {
+    const ground = await this.groundService.updateGround(groundId, groundData);
+    if (!ground) {
+      throw new NotFoundException(`Ground with ID ${groundId} not found`);
+    }
+    return ground;
+  }
+
+  @Delete(':id')
+  async deleteGround(@Param('id') groundId: number): Promise<void> {
+    const deleted = await this.groundService.deleteGround(groundId);
+    if (!deleted) {
+      throw new NotFoundException(`Ground with ID ${groundId} not found`);
+    }
+  }
 }

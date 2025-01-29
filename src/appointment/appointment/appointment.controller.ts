@@ -134,4 +134,12 @@ export class AppointmentController {
 async getUserAppointments(@Query('userId') userId: number) {
   return this.appointmentService.getUserAppointments(userId);
 }
+
+@Put('user/:id/cancel')
+async cancelUserAppointment(
+  @Param('id') appointmentId: number,
+  @Body('cancelReason') cancelReason: string,
+) {
+  return this.appointmentService.cancelUserAppointment(appointmentId, cancelReason);
+}
 }

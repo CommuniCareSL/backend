@@ -301,24 +301,28 @@ export class AppointmentService {
     });
   }
 // status chinthanaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-  async getUserAppointments(userId: number): Promise<Appointment[]> {
-    return this.appointmentModel.findAll({
-      where: { userId },
-      include: [
-        {
-          model: this.userModel,
-          attributes: ['fullName'],
-        },
-        {
-          model: Sabha,
-          attributes: ['sabhaName'],
-        },
-        {
-          model: Department,
-          attributes: ['departmentName'],
-        },
-      ],
-      order: [['date', 'DESC']],
-    });
+async getUserAppointments(userId: number) {
+  return this.appointmentModel.findAll({
+    where: { userId },
+    include: [
+      { model: this.userModel, attributes: ['fullName'] },
+      { model: Sabha, attributes: ['sabhaName'] },
+      { model: Department, attributes: ['departmentName'] }
+    ],
+    order: [['createdAt', 'DESC']],
+  });
+}
+
+async cancelUserAppointment(appointmentId: number, cancelReason: string) {
+  const appointment = await this.appointmentModel.findByPk(appointmentId);
+  if (!appointment) {
+    throw new Error('Appointment not found');
   }
+
+  appointment.status = 1;
+  appointment.ucNote = cancelReason;
+  await appointment.save();
+
+  return appointment;
+}
 }

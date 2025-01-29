@@ -8,6 +8,7 @@ import { Appointment } from './appointment.model';
 import { Department } from '../../department/department.model';
 
 
+
 @Module({
   imports: [SequelizeModule.forFeature([ Sabha, User, Appointment, Department] )],
   controllers: [AppointmentController],

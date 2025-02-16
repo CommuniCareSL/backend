@@ -15,4 +15,9 @@ export class AdminChartController {
     async getComplaintData(@Param('sabhaId') sabhaId: number) {
         return this.adminChartService.getComplaintDataBySabhaId(sabhaId);
     }
+
+    @Get('complaints/weekly/:sabhaId')
+  async getWeeklyComplaints(@Param('sabhaId') sabhaId: string) {
+    return this.adminChartService.getWeeklyComplaints(parseInt(sabhaId, 10));
+  }
 }
